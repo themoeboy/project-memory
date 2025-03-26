@@ -4,8 +4,8 @@ extends CharacterBody2D
 const GRAVITY = 2000.0
 const MAX_SPEED = 300.0
 const JUMP_FORCE = -500.0
-const DASH_SPEED = 600.0
-const ACCELERATION = 500.0
+const DASH_SPEED = 400.0
+const ACCELERATION = 200.0
 const DEACCELERATION = 1000.0
 const COYOTE_TIME = 0.2
 const JUMP_BUFFER_TIME = 0.1
