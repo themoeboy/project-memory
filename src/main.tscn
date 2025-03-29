@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=4 uid="uid://c1xp2narxicdy"]
+[gd_scene load_steps=4 format=4 uid="uid://c1xp2narxicdy"]
 
 [ext_resource type="TileSet" uid="uid://chudq30gk5gim" path="res://assets/tileset/version1.tres" id="1_lsuuv"]
 [ext_resource type="PackedScene" uid="uid://l85yqf8v2y5" path="res://src/player/player.tscn" id="2_aa85e"]
+[ext_resource type="PackedScene" uid="uid://vekd2gliib6n" path="res://src/enemy/slime.tscn" id="3_5q4o7"]
 
 [node name="Node2D" type="Node2D"]
 
@@ -12,4 +13,7 @@ tile_map_data = PackedByteArray("AAAXABUAAAABAAEAAAAYABUAAAABAAEAAAAZABUAAAABAAE
 tile_set = ExtResource("1_lsuuv")
 
 [node name="player" parent="." instance=ExtResource("2_aa85e")]
-position = Vector2(305, 311)
+position = Vector2(296, 250)
+
+[node name="slime" parent="." instance=ExtResource("3_5q4o7")]
+position = Vector2(427, 280)

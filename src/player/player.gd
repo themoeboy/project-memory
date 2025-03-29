@@ -83,10 +83,10 @@ func _physics_process(delta):
 			current_state = State.FALLING
 
 	# Debugging
-	print("State: ", current_state)
-	print("Velocity: ", velocity)
-	print("Coyote Timer: ", coyote_timer)
-	print("Jump Buffer Timer: ", jump_buffer_timer)
+	#print("State: ", current_state)
+	#print("Velocity: ", velocity)
+	#print("Coyote Timer: ", coyote_timer)
+	#print("Jump Buffer Timer: ", jump_buffer_timer)
 
 func handle_idle_state(delta):
 	handle_input(delta)

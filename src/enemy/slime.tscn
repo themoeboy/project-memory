@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://vekd2gliib6n"]
+
+[ext_resource type="Script" uid="uid://cw7kuvnvglxg6" path="res://src/enemy/enemy.gd" id="1_6j2al"]
+[ext_resource type="Texture2D" uid="uid://bgs1vinqtfhrq" path="res://assets/Enemy/rock1.png" id="2_ig63i"]
+[ext_resource type="PackedScene" uid="uid://nohr28l1a6ld" path="res://src/helpers/ai_controller.tscn" id="3_lucs4"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xso4u"]
+size = Vector2(9.5, 8)
+
+[node name="slime" type="CharacterBody2D"]
+script = ExtResource("1_6j2al")
+ACCELERATION = 20.0
+MAX_SPEED = 80.0
+
+[node name="sprite" type="Sprite2D" parent="."]
+position = Vector2(0, -8)
+texture = ExtResource("2_ig63i")
+
+[node name="collision" type="CollisionShape2D" parent="."]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_xso4u")
+
+[node name="ai_controller" parent="." node_paths=PackedStringArray("enemy") instance=ExtResource("3_lucs4")]
+enemy = NodePath("..")
+patrol_range = 50.0
+chase_speed = 1.0
