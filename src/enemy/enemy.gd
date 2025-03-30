@@ -13,21 +13,21 @@ const WALL_SLIDE_SPEED = 100.0
 
 @export var ACCELERATION: float = 100.0
 @export var MAX_SPEED: float = 100.0
+@export var SPEED: float = 100.0
 @export var DEACCELERATION = 1000.0
 @onready var ai_controller = $ai_controller  # Reference to AI logic
 
-var ai_direction
+var ai_direction = 1 
 
 func _physics_process(delta):
-	if ai_controller:
-		ai_direction = ai_controller.direction  # Use AI input
-
-	# Movement handling
-	if ai_direction != 0:
-		velocity.x = move_toward(velocity.x, ai_direction * MAX_SPEED, ACCELERATION * delta)
+	print(velocity.x)
+	if ai_direction != 0: 
+		if abs(velocity.x) >= MAX_SPEED:
+			velocity.x = sign(velocity.x) * MAX_SPEED  # Clamp speed
+		else:
+			velocity.x = move_toward(velocity.x, ai_direction * SPEED, ACCELERATION * delta)
 	else:
-		velocity.x = move_toward(velocity.x, 0, DEACCELERATION * delta)
-
+		velocity.x = move_toward(velocity.x, 0, DEACCELERATION * delta)  # Decelerate smoothly
 	# Gravity
 	if not is_on_floor():
 		velocity.y += GRAVITY * delta

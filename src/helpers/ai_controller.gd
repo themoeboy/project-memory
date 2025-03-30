@@ -38,19 +38,24 @@ func _process(delta):
 
 func patrol_behavior(delta):
 	var distance_from_start = enemy.global_position.x - start_position.x
-
-	print("Current Distance:", distance_from_start)
-	print("Patrol Range:", patrol_range)
+	var reversed = false
 	
-	if distance_from_start == patrol_range:
-		direction = 0  # Move left
-	# Flip direction when exceeding patrol range
-	if distance_from_start >= patrol_range:
-		direction = -1  # Move left
-	elif distance_from_start <= -patrol_range:
-		direction = 1   # Move right
 
-	enemy.ai_direction = direction
+	# Stop when reaching patrol limit before reversing
+	if abs(distance_from_start) >= patrol_range and !reversed:
+		enemy.ai_direction = 0  # Hard stop
+		reversed = true
+		await get_tree().create_timer(0.5).timeout  # 0.5s pause before reversing
+	if reversed and distance_from_start >= patrol_range:
+		direction = -1  # Reverse direction
+		enemy.ai_direction = direction  # Resume moving
+		reversed = false
+	elif reversed and distance_from_start <= patrol_range:
+		direction = 1  # Reverse direction
+		enemy.ai_direction = direction  # Resume moving
+		reversed = false
+
+
 
 
 func chase_behavior(delta):
