@@ -39,7 +39,6 @@ func _process(delta):
 func patrol_behavior(delta):
 	var distance_from_start = enemy.global_position.x - start_position.x
 	var reversed = false
-	
 
 	# Stop when reaching patrol limit before reversing
 	if abs(distance_from_start) >= patrol_range and !reversed:

@@ -17,5 +17,4 @@ position = Vector2(296, 250)
 
 [node name="slime" parent="." instance=ExtResource("3_5q4o7")]
 position = Vector2(427, 280)
-ACCELERATION = 5.0
-MAX_SPEED = 20.0
+ACCELERATION = 100.0
