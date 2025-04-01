@@ -19,7 +19,7 @@ const WALL_SLIDE_SPEED = 100.0
 var ai_direction = 1 
 
 func _physics_process(delta):
-	print(velocity.x)
+
 	if ai_direction != 0: 
 		velocity.x = move_toward(velocity.x, ai_direction * MAX_SPEED, ACCELERATION * delta)
 	else:

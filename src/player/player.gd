@@ -35,6 +35,10 @@ var is_jumping = false
 @onready var ray_cast_2d_left = $RayCast2D_left
 @onready var ray_cast_2d_right = $RayCast2D_right
 
+var attack_area: Area2D  # Reference to the attack hitbox
+
+func _ready():
+	attack_area = $AttackArea  # Ensure you have an Area2D node for hit detection
 
 # Physics process
 func _physics_process(delta):
@@ -127,7 +131,9 @@ func handle_falling_state(delta):
 
 func handle_dashing_state(delta):
 	dash_timer -= delta
+	attack_area.monitoring = true  # Enable attack detection
 	if dash_timer <= 0:
+		attack_area.monitoring = false  # Disable attack after dash ends
 		current_state = State.FALLING
 
 func handle_double_jumping_state(delta):
