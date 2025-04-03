@@ -30,6 +30,7 @@ var jump_buffer_timer = 0.0
 var dash_timer = 0.0
 var can_double_jump = true
 var is_jumping = false
+var is_dashing = false
 
 # RayCast nodes
 @onready var ray_cast_2d_left = $RayCast2D_left
@@ -38,11 +39,12 @@ var is_jumping = false
 var attack_area: Area2D  # Reference to the attack hitbox
 
 func _ready():
-	attack_area = $AttackArea  # Ensure you have an Area2D node for hit detection
+	attack_area = $dash_attack # Ensure you have an Area2D node for hit detection
 
 # Physics process
 func _physics_process(delta):
 	# Update timers
+
 	if is_on_floor():
 		coyote_timer = COYOTE_TIME
 		can_double_jump = true
@@ -51,7 +53,7 @@ func _physics_process(delta):
 
 	if jump_buffer_timer > 0:
 		jump_buffer_timer -= delta
-
+		
 	# State handling
 	match current_state:
 		State.IDLE:
@@ -74,9 +76,9 @@ func _physics_process(delta):
 
 	# Determine the next state
 	if is_on_floor():
-		if abs(velocity.x) > 0:
+		if abs(velocity.x) > 0 and !is_dashing:
 			current_state = State.RUNNING
-		else:
+		elif !is_dashing:
 			current_state = State.IDLE
 	elif velocity.y < 0:
 		current_state = State.JUMPING
@@ -101,6 +103,7 @@ func handle_idle_state(delta):
 		jump_buffer_timer = 0
 	if Input.is_action_just_pressed("dash"):
 		dash()
+		
 
 func handle_running_state(delta):
 	handle_input(delta)
@@ -132,9 +135,14 @@ func handle_falling_state(delta):
 func handle_dashing_state(delta):
 	dash_timer -= delta
 	attack_area.monitoring = true  # Enable attack detection
+	set_collision_layer_value(1, false)
+	set_collision_mask_value(2, false)
 	if dash_timer <= 0:
 		attack_area.monitoring = false  # Disable attack after dash ends
 		current_state = State.FALLING
+		set_collision_layer_value(1, true)  # Disable collision on layer 0
+		set_collision_mask_value(2 , true)   # Stop detecting layer 0
+		is_dashing = false
 
 func handle_double_jumping_state(delta):
 	handle_jumping_state(delta)
@@ -174,10 +182,12 @@ func double_jump():
 	current_state = State.DOUBLE_JUMPING
 
 func dash():
+	is_dashing = true
+	current_state = State.DASHING
 	dash_timer = DASH_TIME
 	var dash_direction = int(Input.is_action_pressed("move_right")) - int(Input.is_action_pressed("move_left"))
 	velocity.x = dash_direction * DASH_SPEED
-	current_state = State.DASHING
+	
 
 func if_is_on_wall() -> bool:
 	return ray_cast_2d_right.is_colliding() or ray_cast_2d_left.is_colliding()

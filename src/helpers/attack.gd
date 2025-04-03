@@ -1,5 +1,8 @@
 extends Area2D
 
-func _on_area_entered(enemy):
+@export var DAMAGE = 20
+
+func _on_area_entered(area):
+	var enemy = area.get_parent()
 	if enemy.has_method("take_damage"):
-		enemy.take_damage(10)  
+		enemy.take_damage(DAMAGE)

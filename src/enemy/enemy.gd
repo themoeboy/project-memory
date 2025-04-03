@@ -18,6 +18,17 @@ const WALL_SLIDE_SPEED = 100.0
 
 var ai_direction = 1 
 
+@onready var health_component = $health  
+
+func _ready():
+	health_component.health_changed.connect(_on_health_changed)  # Connect signal
+
+func _on_health_changed(new_health):
+	print("Player health updated:", new_health)
+
+func take_damage(amount: int):
+	health_component.take_damage(amount)  
+
 func _physics_process(delta):
 
 	if ai_direction != 0: 
