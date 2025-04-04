@@ -21,6 +21,7 @@ MAX_SPEED = 50.0
 [node name="sprite" type="Sprite2D" parent="."]
 position = Vector2(0, -8)
 texture = ExtResource("2_ig63i")
+flip_h = true
 
 [node name="collision" type="CollisionShape2D" parent="."]
 position = Vector2(-1, -4)

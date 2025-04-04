@@ -31,6 +31,8 @@ var dash_timer = 0.0
 var can_double_jump = true
 var is_jumping = false
 var is_dashing = false
+var input_direction = 0
+var last_direction = 1 
 
 # RayCast nodes
 @onready var ray_cast_2d_left = $RayCast2D_left
@@ -73,7 +75,7 @@ func _physics_process(delta):
 
 	# Apply velocity
 	move_and_slide()
-
+	handle_direction()
 	# Determine the next state
 	if is_on_floor():
 		if abs(velocity.x) > 0 and !is_dashing:
@@ -93,7 +95,10 @@ func _physics_process(delta):
 	#print("Velocity: ", velocity)
 	#print("Coyote Timer: ", coyote_timer)
 	#print("Jump Buffer Timer: ", jump_buffer_timer)
-
+	print("inp dir ", input_direction)
+	print("las dir ", last_direction)
+	print("scale x ", scale.x)
+	
 func handle_idle_state(delta):
 	handle_input(delta)
 	if Input.is_action_just_pressed("jump"):
@@ -156,7 +161,7 @@ func handle_wall_sliding_state(delta):
 		double_jump()
 
 func handle_input(delta):
-	var input_direction = 0
+	input_direction = 0
 	if Input.is_action_pressed("move_left"):
 		input_direction -= 1
 	if Input.is_action_pressed("move_right"):
@@ -185,14 +190,19 @@ func dash():
 	is_dashing = true
 	current_state = State.DASHING
 	dash_timer = DASH_TIME
-	var dash_direction = int(Input.is_action_pressed("move_right")) - int(Input.is_action_pressed("move_left"))
-	velocity.x = dash_direction * DASH_SPEED
+	velocity.x = last_direction * DASH_SPEED
 	
 
 func if_is_on_wall() -> bool:
 	return ray_cast_2d_right.is_colliding() or ray_cast_2d_left.is_colliding()
 	
-func move_toward(value: float, target: float, step: float) -> float:
-	if value < target:
-		return min(value + step, target)
-	return max(value - step, target)
+
+func handle_direction():
+	if input_direction != 0 and input_direction != last_direction:
+		if (input_direction == -1):
+			scale.y = -1
+			rotation = PI
+		elif (input_direction == 1):
+			scale.y = 1 
+			rotation = 0
+		last_direction = input_direction

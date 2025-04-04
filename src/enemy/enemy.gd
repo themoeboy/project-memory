@@ -17,6 +17,7 @@ const WALL_SLIDE_SPEED = 100.0
 @onready var ai_controller = $ai_controller  # Reference to AI logic
 
 var ai_direction = 1 
+var last_direction = 1
 
 @onready var health_component = $health  
 
@@ -40,3 +41,14 @@ func _physics_process(delta):
 		velocity.y += GRAVITY * delta
 
 	move_and_slide()
+	handle_direction()
+
+func handle_direction():
+	if ai_direction != 0 and ai_direction != last_direction:
+		if (ai_direction == -1):
+			scale.y = -1
+			rotation = PI
+		elif (ai_direction == 1):
+			scale.y = 1 
+			rotation = 0
+		last_direction = ai_direction
