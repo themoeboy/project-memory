@@ -14,18 +14,18 @@ const WALL_SLIDE_SPEED = 100.0
 @export var ACCELERATION: float = 100.0
 @export var MAX_SPEED: float = 100.0
 @export var DEACCELERATION = 1000.0
+@export var DAMAGE = 10
 @onready var ai_controller = $ai_controller  # Reference to AI logic
+@onready var health_component = $health  
 
 var ai_direction = 1 
 var last_direction = 1
-
-@onready var health_component = $health  
 
 func _ready():
 	health_component.health_changed.connect(_on_health_changed)  # Connect signal
 
 func _on_health_changed(new_health):
-	print("Player health updated:", new_health)
+	print("enemy health updated:", new_health)
 
 func take_damage(amount: int):
 	health_component.take_damage(amount)  
