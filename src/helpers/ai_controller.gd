@@ -55,8 +55,6 @@ func patrol_behavior(delta):
 		reversed = false
 
 
-
-
 func chase_behavior(delta):
 	var player = get_tree().get_first_node_in_group("player")
 	if player:
