@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 # Constants
 @export var GRAVITY = 2000.0
-@export var MAX_SPEED = 300.0
+@export var MAX_SPEED = 150.0
 @export var JUMP_FORCE = -500.0
 @export var DASH_SPEED = 400.0
 @export var DASH_DAMAGE = 20
@@ -31,6 +31,7 @@ var current_state = State.IDLE
 var coyote_timer = 0.0
 var jump_buffer_timer = 0.0
 var dash_timer = 0.0
+var pre_dash_velocity = 0
 var hurt_timer = 0.0
 var can_double_jump = true
 var is_jumping = false
@@ -103,7 +104,7 @@ func _physics_process(delta):
 				current_state = State.FALLING
 
 	# Debugging
-	#print("Velocity: ", velocity)
+	print("Velocity: ", velocity)
 	#print("Coyote Timer: ", coyote_timer)
 	#print("Jump Buffer Timer: ", jump_buffer_timer)
 	#print("inp dir ", input_direction)
@@ -159,6 +160,7 @@ func handle_dashing_state(delta):
 	hitbox_area.monitoring = false  # Be immune to damage on dash
 	set_collision_layer_value(1, false)
 	set_collision_mask_value(2, false)
+
 	if dash_timer <= 0:
 		hitbox_area.monitoring = true  # Be immune to damage on dash
 		dash_attack_area.monitoring = false  # Disable attack after dash ends
@@ -166,6 +168,7 @@ func handle_dashing_state(delta):
 		set_collision_layer_value(1, true)  # Disable collision on layer 0
 		set_collision_mask_value(2 , true)   # Stop detecting layer 0
 		is_dashing = false
+		velocity.x = pre_dash_velocity
 
 func handle_double_jumping_state(delta):
 	handle_jumping_state(delta)
@@ -185,8 +188,11 @@ func handle_input(delta):
 	if Input.is_action_pressed("move_right"):
 		input_direction += 1
 
-	# Apply acceleration and deacceleration
-	if input_direction != 0:
+	# If input direction is opposite to movement, stop immediately
+	if input_direction != 0 and sign(velocity.x) != input_direction and velocity.x != 0:
+		velocity.x = 0
+	# Otherwise apply normal acceleration/deceleration
+	elif input_direction != 0:
 		velocity.x = move_toward(velocity.x, input_direction * MAX_SPEED, ACCELERATION * delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0, DEACCELERATION * delta)
@@ -206,16 +212,16 @@ func double_jump():
 
 func dash():
 	is_dashing = true
+	pre_dash_velocity = velocity.x
 	current_state = State.DASHING
 	dash_attack_area.monitoring = true  # Enable attack detection
 	dash_timer = DASH_TIME
 	velocity.x = last_direction * DASH_SPEED
-	
+
 
 func if_is_on_wall() -> bool:
 	return ray_cast_2d_right.is_colliding() or ray_cast_2d_left.is_colliding()
 	
-
 func handle_direction():
 	if input_direction != 0 and input_direction != last_direction:
 		if (input_direction == -1):
@@ -225,6 +231,10 @@ func handle_direction():
 			scale.y = 1 
 			rotation = 0
 		last_direction = input_direction
+		
+func push_character(x: int):
+	print(last_direction)
+	velocity.x = last_direction * x
 
 func _on_health_changed(new_health):
 	print("Player health updated:", new_health)
@@ -232,5 +242,8 @@ func _on_health_changed(new_health):
 func take_damage(amount: int):
 	if !is_hurting:
 		is_hurting = true
+		hurt_timer = HURT_TIME
+		push_character(50)
+		GAME.freeze_frame(0.2, HURT_TIME)
 		current_state = State.HURTING
 		health_component.take_damage(amount)  

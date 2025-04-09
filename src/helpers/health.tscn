@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://8r2hfuo7fejg" path="res://src/helpers/health.gd" id="1_ynrea"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ynrea"]
-font_size = 8
+font_size = 12
 font_color = Color(0, 0, 0, 1)
 outline_size = 2
 

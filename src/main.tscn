@@ -27,6 +27,7 @@ ACCELERATION = 100.0
 motion_mirroring = Vector2(1280, 720)
 
 [node name="background" type="Sprite2D" parent="parallax/background"]
+visible = false
 position = Vector2(-30, 10)
 texture = ExtResource("4_3cfgd")
 centered = false
