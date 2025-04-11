@@ -17,8 +17,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-MAIN="*res://src/main.gd"
-GAME="*res://src/helpers/game.gd"
+UTIL="*res://src/helpers/util.gd"
+ENUMS="*res://src/helpers/enums.gd"
 
 [display]
 

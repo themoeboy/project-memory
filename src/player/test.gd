@@ -1,5 +1,5 @@
 extends Label
 
 func _physics_process(delta):
-	text = get_parent().State.keys()[get_parent().current_state]
+	text = ENUMS.player_state.keys()[get_parent().current_state]
 	

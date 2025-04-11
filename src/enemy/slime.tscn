@@ -33,6 +33,7 @@ shape = SubResource("RectangleShape2D_xso4u")
 
 [node name="ai_controller" parent="." node_paths=PackedStringArray("enemy") instance=ExtResource("3_lucs4")]
 enemy = NodePath("..")
+movement_pattern = 0
 patrol_range = 50.0
 chase_speed = 1.0
 

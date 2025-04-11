@@ -14,20 +14,8 @@ extends CharacterBody2D
 @export var HURT_TIME = 0.5
 @export var WALL_SLIDE_SPEED = 100.0
 
-# States
-enum State {
-	IDLE,
-	RUNNING,
-	JUMPING,
-	FALLING,
-	DASHING,
-	DOUBLE_JUMPING,
-	WALL_SLIDING,
-	HURTING
-}
-
 # Variables
-var current_state = State.IDLE
+var current_state = ENUMS.player_state.IDLE
 var coyote_timer = 0.0
 var jump_buffer_timer = 0.0
 var dash_timer = 0.0
@@ -65,21 +53,21 @@ func _physics_process(delta):
 		
 	# State handling
 	match current_state:
-		State.IDLE:
+		ENUMS.player_state.IDLE:
 			handle_idle_state(delta)
-		State.RUNNING:
+		ENUMS.player_state.RUNNING:
 			handle_running_state(delta)
-		State.JUMPING:
+		ENUMS.player_state.JUMPING:
 			handle_jumping_state(delta)
-		State.FALLING:
+		ENUMS.player_state.FALLING:
 			handle_falling_state(delta)
-		State.DASHING:
+		ENUMS.player_state.DASHING:
 			handle_dashing_state(delta)
-		State.DOUBLE_JUMPING:
+		ENUMS.player_state.DOUBLE_JUMPING:
 			handle_double_jumping_state(delta)
-		State.WALL_SLIDING:
+		ENUMS.player_state.WALL_SLIDING:
 			handle_wall_sliding_state(delta)
-		State.HURTING:
+		ENUMS.player_state.HURTING:
 			handle_hurting(delta)
 
 	# Apply velocity
@@ -92,16 +80,16 @@ func _physics_process(delta):
 	else:
 		if is_on_floor():
 			if abs(velocity.x) > 0:
-				current_state = State.RUNNING
+				current_state = ENUMS.player_state.RUNNING
 			else:
-				current_state = State.IDLE
+				current_state = ENUMS.player_state.IDLE
 		elif velocity.y < 0:
-			current_state = State.JUMPING
+			current_state = ENUMS.player_state.JUMPING
 		elif velocity.y > 0:
 			if is_on_wall():
-				current_state = State.WALL_SLIDING
+				current_state = ENUMS.player_state.WALL_SLIDING
 			else:
-				current_state = State.FALLING
+				current_state = ENUMS.player_state.FALLING
 
 	# Debugging
 	print("Velocity: ", velocity)
@@ -164,7 +152,7 @@ func handle_dashing_state(delta):
 	if dash_timer <= 0:
 		hitbox_area.monitoring = true  # Be immune to damage on dash
 		dash_attack_area.monitoring = false  # Disable attack after dash ends
-		current_state = State.FALLING
+		current_state = ENUMS.player_state.FALLING
 		set_collision_layer_value(1, true)  # Disable collision on layer 0
 		set_collision_mask_value(2 , true)   # Stop detecting layer 0
 		is_dashing = false
@@ -175,7 +163,7 @@ func handle_double_jumping_state(delta):
 
 func handle_wall_sliding_state(delta):
 	if not if_is_on_wall():
-		current_state = State.FALLING
+		current_state = ENUMS.player_state.FALLING
 		return
 	velocity.y = min(velocity.y, WALL_SLIDE_SPEED)
 	if Input.is_action_just_pressed("jump"):
@@ -208,12 +196,12 @@ func jump():
 func double_jump():
 	velocity.y = JUMP_FORCE
 	can_double_jump = false
-	current_state = State.DOUBLE_JUMPING
+	current_state = ENUMS.player_state.DOUBLE_JUMPING
 
 func dash():
 	is_dashing = true
 	pre_dash_velocity = velocity.x
-	current_state = State.DASHING
+	current_state = ENUMS.player_state.DASHING
 	dash_attack_area.monitoring = true  # Enable attack detection
 	dash_timer = DASH_TIME
 	velocity.x = last_direction * DASH_SPEED
@@ -244,6 +232,6 @@ func take_damage(amount: int):
 		is_hurting = true
 		hurt_timer = HURT_TIME
 		push_character(50)
-		GAME.freeze_frame(0.2, HURT_TIME)
-		current_state = State.HURTING
+		UTIL.freeze_frame(0.2, HURT_TIME)
+		current_state = ENUMS.player_state.HURTING
 		health_component.take_damage(amount)  

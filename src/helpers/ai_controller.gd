@@ -1,7 +1,7 @@
 extends Node
 
 @export var enemy: CharacterBody2D  # Reference to the enemy
-@export var movement_pattern: String = "patrol"  # "patrol", "chase", "jump", "fly"
+@export var movement_pattern: int = ENUMS.enemy_behavior.IDLE
 @export var patrol_range: float = 200.0
 @export var chase_speed: float = 400.0
 @export var idle_time: float = 2.0
@@ -25,15 +25,15 @@ func _process(delta):
 		return
 
 	match movement_pattern:
-		"patrol":
+		ENUMS.enemy_behavior.PATROL:
 			patrol_behavior(delta)
-		"chase":
+		ENUMS.enemy_behavior.CHASE:
 			chase_behavior(delta)
-		"jump":
+		ENUMS.enemy_behavior.JUMP:
 			jumping_behavior(delta)
-		"fly":
+		ENUMS.enemy_behavior.FLY:
 			flying_behavior(delta)
-		"idle":
+		ENUMS.enemy_behavior.IDLE:
 			idle_behavior(delta)
 
 func patrol_behavior(delta):
@@ -80,5 +80,5 @@ func idle_behavior(delta):
 	enemy.ai_direction = 0  # Stop movement
 	idle_timer += delta
 	if idle_timer >= idle_time:
-		movement_pattern = "patrol"  # Resume patrol after idling
+		movement_pattern = ENUMS.enemy_behavior.PATROL  # Resume patrol after idling
 		idle_timer = 0.0
