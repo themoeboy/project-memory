@@ -22,9 +22,6 @@ var dash_timer = 0.0
 var pre_dash_velocity = 0
 var hurt_timer = 0.0
 var can_double_jump = true
-var is_jumping = false
-var is_dashing = false
-var is_hurting = false 
 var input_direction = 0
 var last_direction = 1 
 
@@ -74,25 +71,8 @@ func _physics_process(delta):
 	move_and_slide()
 	handle_direction()
 	
-	# Determine the next state
-	if is_hurting or is_dashing:
-		return
-	else:
-		if is_on_floor():
-			if abs(velocity.x) > 0:
-				current_state = ENUMS.player_state.RUNNING
-			else:
-				current_state = ENUMS.player_state.IDLE
-		elif velocity.y < 0:
-			current_state = ENUMS.player_state.JUMPING
-		elif velocity.y > 0:
-			if is_on_wall():
-				current_state = ENUMS.player_state.WALL_SLIDING
-			else:
-				current_state = ENUMS.player_state.FALLING
-
 	# Debugging
-	print("Velocity: ", velocity)
+	#print("Velocity: ", velocity)
 	#print("Coyote Timer: ", coyote_timer)
 	#print("Jump Buffer Timer: ", jump_buffer_timer)
 	#print("inp dir ", input_direction)
@@ -104,10 +84,17 @@ func handle_idle_state(delta):
 	if Input.is_action_just_pressed("jump"):
 		jump_buffer_timer = JUMP_BUFFER_TIME
 	if (coyote_timer > 0 or is_on_floor()) and jump_buffer_timer > 0:
-		jump()
+		jump() 
 		jump_buffer_timer = 0
+		return
 	if Input.is_action_just_pressed("dash"):
 		dash()
+		return
+	if is_on_floor():
+			if abs(velocity.x) > 0:
+				current_state = ENUMS.player_state.RUNNING
+			else:
+				current_state = ENUMS.player_state.IDLE
 		
 
 func handle_running_state(delta):
@@ -117,24 +104,43 @@ func handle_running_state(delta):
 	if (coyote_timer > 0 or is_on_floor()) and jump_buffer_timer > 0:
 		jump()
 		jump_buffer_timer = 0
+		return
 	if Input.is_action_just_pressed("dash"):
 		dash()
+		return
+	if is_on_floor():
+			if abs(velocity.x) > 0:
+				current_state = ENUMS.player_state.RUNNING
+			else:
+				current_state = ENUMS.player_state.IDLE
 
 func handle_hurting(delta):
 	handle_input(delta)
 	hurt_timer -= delta
 	if hurt_timer <= 0:
-		is_hurting = false
+		current_state = ENUMS.player_state.IDLE
 
 func handle_jumping_state(delta):
 	handle_input(delta)
 	if not Input.is_action_pressed("jump") and velocity.y < 0:
 		velocity.y *= 0.5
-		is_jumping = false
 	if Input.is_action_just_pressed("dash"):
 		dash()
+		return
 	if Input.is_action_just_pressed("jump") and can_double_jump:
 		double_jump()
+		return
+	if is_on_floor():
+		if abs(velocity.x) > 0:
+			current_state = ENUMS.player_state.RUNNING
+		else:
+			current_state = ENUMS.player_state.IDLE
+	if velocity.y > 0:
+		if is_on_wall():
+			current_state = ENUMS.player_state.WALL_SLIDING
+		else:
+			current_state = ENUMS.player_state.FALLING
+
 
 func handle_falling_state(delta):
 	handle_input(delta)
@@ -142,6 +148,11 @@ func handle_falling_state(delta):
 		dash()
 	if Input.is_action_just_pressed("jump") and can_double_jump:
 		double_jump()
+	if is_on_floor():
+		if abs(velocity.x) > 0:
+			current_state = ENUMS.player_state.RUNNING
+		else:
+			current_state = ENUMS.player_state.IDLE
 
 func handle_dashing_state(delta):
 	dash_timer -= delta
@@ -152,10 +163,9 @@ func handle_dashing_state(delta):
 	if dash_timer <= 0:
 		hitbox_area.monitoring = true  # Be immune to damage on dash
 		dash_attack_area.monitoring = false  # Disable attack after dash ends
-		current_state = ENUMS.player_state.FALLING
+		current_state = ENUMS.player_state.IDLE
 		set_collision_layer_value(1, true)  # Disable collision on layer 0
 		set_collision_mask_value(2 , true)   # Stop detecting layer 0
-		is_dashing = false
 		velocity.x = pre_dash_velocity
 
 func handle_double_jumping_state(delta):
@@ -190,8 +200,9 @@ func handle_input(delta):
 		velocity.y += GRAVITY * delta
 
 func jump():
+	current_state = ENUMS.player_state.JUMPING
 	velocity.y = JUMP_FORCE
-	is_jumping = true
+
 
 func double_jump():
 	velocity.y = JUMP_FORCE
@@ -199,7 +210,6 @@ func double_jump():
 	current_state = ENUMS.player_state.DOUBLE_JUMPING
 
 func dash():
-	is_dashing = true
 	pre_dash_velocity = velocity.x
 	current_state = ENUMS.player_state.DASHING
 	dash_attack_area.monitoring = true  # Enable attack detection
@@ -228,8 +238,7 @@ func _on_health_changed(new_health):
 	print("Player health updated:", new_health)
 
 func take_damage(amount: int):
-	if !is_hurting:
-		is_hurting = true
+	if current_state != ENUMS.player_state.HURTING:
 		hurt_timer = HURT_TIME
 		push_character(50)
 		UTIL.freeze_frame(0.2, HURT_TIME)
