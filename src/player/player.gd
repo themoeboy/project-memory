@@ -34,11 +34,11 @@ var last_direction = 1
 @onready var hitbox_area = $hitbox
 
 func _ready():
-	health_component.health_changed.connect(_on_health_changed)  # Connect signal
-
+	health_component.health_changed.connect(_on_health_changed)  
+	health_component.now_dead.connect(_on_death) 
+	
 func _physics_process(delta):
 	# Update timers
-
 	if is_on_floor():
 		coyote_timer = COYOTE_TIME
 		can_double_jump = true
@@ -236,6 +236,9 @@ func push_character(x: int):
 
 func _on_health_changed(new_health):
 	print("Player health updated:", new_health)
+
+func _on_death():
+	print("Player dead")
 
 func take_damage(amount: int):
 	if current_state != ENUMS.player_state.HURTING:

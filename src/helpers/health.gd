@@ -4,15 +4,19 @@ extends Node2D
 var current_health: int
 
 signal health_changed(new_health)
+signal now_dead(new_health)
 
-@onready var test = $test 
+@onready var health_label = $health_label
 
 func _ready():
 	current_health = max_health
 
 func take_damage(amount: int):
 	current_health = max(0, current_health - amount)
-	health_changed.emit(current_health)  # Emit signal when health changes
+	if current_health == 0:
+		now_dead.emit()
+	else:
+		health_changed.emit(current_health)  # Emit signal when health changes
 	
 func _physics_process(delta):
-	test.text = str(current_health)
+	health_label.text = str(current_health)

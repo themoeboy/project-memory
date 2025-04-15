@@ -59,7 +59,7 @@ position = Vector2(1, -1)
 shape = SubResource("RectangleShape2D_5f2sf")
 debug_color = Color(0.604464, 0.366649, 0.99886, 0.42)
 
-[node name="test" type="Label" parent="."]
+[node name="player_state_label" type="Label" parent="."]
 offset_left = -20.0
 offset_top = -46.0
 offset_right = 20.0

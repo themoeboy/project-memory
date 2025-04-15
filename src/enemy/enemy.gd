@@ -22,7 +22,8 @@ var ai_direction = 1
 var last_direction = 1
 
 func _ready():
-	health_component.health_changed.connect(_on_health_changed)  # Connect signal
+	health_component.health_changed.connect(_on_health_changed)
+	health_component.now_dead.connect(_on_death) 
 
 func _on_health_changed(new_health):
 	print("enemy health updated:", new_health)
@@ -31,7 +32,6 @@ func take_damage(amount: int):
 	health_component.take_damage(amount)  
 
 func _physics_process(delta):
-
 	if ai_direction != 0: 
 		velocity.x = move_toward(velocity.x, ai_direction * MAX_SPEED, ACCELERATION * delta)
 	else:
@@ -52,3 +52,6 @@ func handle_direction():
 			scale.y = 1 
 			rotation = 0
 		last_direction = ai_direction
+
+func _on_death():
+	queue_free()
