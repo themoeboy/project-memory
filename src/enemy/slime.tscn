@@ -1,18 +1,18 @@
 [gd_scene load_steps=8 format=3 uid="uid://vekd2gliib6n"]
 
 [ext_resource type="Script" uid="uid://cw7kuvnvglxg6" path="res://src/enemy/enemy.gd" id="1_6j2al"]
-[ext_resource type="Texture2D" uid="uid://bgs1vinqtfhrq" path="res://assets/Enemy/rock1.png" id="2_ig63i"]
+[ext_resource type="Texture2D" uid="uid://bjk16xi7gmqtt" path="res://assets/draft/enemy-draft.png" id="2_11dp2"]
 [ext_resource type="PackedScene" uid="uid://nohr28l1a6ld" path="res://src/helpers/ai_controller.tscn" id="3_lucs4"]
 [ext_resource type="PackedScene" uid="uid://dne4rabaer156" path="res://src/helpers/health.tscn" id="4_11dp2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xso4u"]
-size = Vector2(11.1875, 8)
+size = Vector2(24, 12)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_11dp2"]
-size = Vector2(11.5, 8)
+size = Vector2(22.4375, 11.75)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rvcuu"]
-size = Vector2(13, 9)
+size = Vector2(25.75, 12.25)
 
 [node name="slime" type="CharacterBody2D" groups=["enemy"]]
 collision_layer = 2
@@ -24,11 +24,11 @@ DAMAGE = 25
 
 [node name="sprite" type="Sprite2D" parent="."]
 position = Vector2(0, -8)
-texture = ExtResource("2_ig63i")
+texture = ExtResource("2_11dp2")
 flip_h = true
 
 [node name="collision" type="CollisionShape2D" parent="."]
-position = Vector2(0, -4)
+position = Vector2(1, -7)
 shape = SubResource("RectangleShape2D_xso4u")
 
 [node name="ai_controller" parent="." node_paths=PackedStringArray("enemy") instance=ExtResource("3_lucs4")]
@@ -45,7 +45,7 @@ collision_layer = 8
 collision_mask = 8
 
 [node name="hitbox" type="CollisionShape2D" parent="hitbox"]
-position = Vector2(0.25, -4)
+position = Vector2(1, -7)
 shape = SubResource("RectangleShape2D_11dp2")
 debug_color = Color(0.837784, 0.103122, 0.892815, 0.42)
 
@@ -54,6 +54,6 @@ collision_layer = 8
 collision_mask = 8
 
 [node name="attack" type="CollisionShape2D" parent="attack"]
-position = Vector2(0, -4)
+position = Vector2(1, -7)
 shape = SubResource("RectangleShape2D_rvcuu")
 debug_color = Color(0.868573, 0.293213, 0.508281, 0.42)

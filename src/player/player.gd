@@ -136,10 +136,7 @@ func handle_jumping_state(delta):
 		else:
 			current_state = ENUMS.player_state.IDLE
 	if velocity.y > 0:
-		if is_on_wall():
-			current_state = ENUMS.player_state.WALL_SLIDING
-		else:
-			current_state = ENUMS.player_state.FALLING
+		current_state = ENUMS.player_state.FALLING
 
 
 func handle_falling_state(delta):
@@ -172,9 +169,6 @@ func handle_double_jumping_state(delta):
 	handle_jumping_state(delta)
 
 func handle_wall_sliding_state(delta):
-	if not if_is_on_wall():
-		current_state = ENUMS.player_state.FALLING
-		return
 	velocity.y = min(velocity.y, WALL_SLIDE_SPEED)
 	if Input.is_action_just_pressed("jump"):
 		double_jump()
@@ -216,9 +210,6 @@ func dash():
 	dash_timer = DASH_TIME
 	velocity.x = last_direction * DASH_SPEED
 
-
-func if_is_on_wall() -> bool:
-	return ray_cast_2d_right.is_colliding() or ray_cast_2d_left.is_colliding()
 	
 func handle_direction():
 	if input_direction != 0 and input_direction != last_direction:
