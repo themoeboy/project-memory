@@ -17,6 +17,7 @@ size = Vector2(24, 20)
 size = Vector2(16.3125, 20.25)
 
 [sub_resource type="LabelSettings" id="LabelSettings_jiejy"]
+font_size = 8
 font_color = Color(0, 0, 0, 1)
 outline_size = 2
 
@@ -35,6 +36,8 @@ texture = ExtResource("2_jiejy")
 
 [node name="camera" type="Camera2D" parent="."]
 offset = Vector2(60, -60)
+process_callback = 0
+position_smoothing_enabled = true
 
 [node name="dash_attack" type="Area2D" parent="."]
 collision_layer = 8
