@@ -8,7 +8,8 @@ enum player_state {
 	DASHING,
 	DOUBLE_JUMPING,
 	WALL_SLIDING,
-	HURTING
+	HURTING,
+	THROWING
 }
 
 enum enemy_behavior {

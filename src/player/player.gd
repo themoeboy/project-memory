@@ -12,7 +12,9 @@ extends CharacterBody2D
 @export var JUMP_BUFFER_TIME = 0.1
 @export var DASH_TIME = 0.2
 @export var HURT_TIME = 0.5
+@export var THROW_TIME = 0.5
 @export var WALL_SLIDE_SPEED = 100.0
+@export var POLEARM_THROW_DAMAGE = 10.0
 
 # Variables
 var current_state = ENUMS.player_state.IDLE
@@ -21,6 +23,7 @@ var jump_buffer_timer = 0.0
 var dash_timer = 0.0
 var pre_dash_velocity = 0
 var hurt_timer = 0.0
+var throw_timer = 0.0
 var can_double_jump = true
 var input_direction = 0
 var last_direction = 1 
@@ -29,9 +32,10 @@ var last_direction = 1
 @onready var ray_cast_2d_left = $RayCast2D_left
 @onready var ray_cast_2d_right = $RayCast2D_right
 @onready var health_component = $health  
-@onready var dash_attack_area = $dash_attack # Ensure you have an Area2D node for hit detection
+@onready var dash_attack_area = $dash_attack 
 @onready var collision_area = $collision
 @onready var hitbox_area = $hitbox
+@onready var polearm = preload("res://src/player/polearm.tscn")
 
 func _ready():
 	health_component.health_changed.connect(_on_health_changed)  
@@ -66,6 +70,8 @@ func _physics_process(delta):
 			handle_wall_sliding_state(delta)
 		ENUMS.player_state.HURTING:
 			handle_hurting(delta)
+		ENUMS.player_state.THROWING:
+			handle_throwing_state(delta)
 
 	# Apply velocity
 	move_and_slide()
@@ -81,6 +87,10 @@ func _physics_process(delta):
 	
 func handle_idle_state(delta):
 	handle_input(delta)
+	if Input.is_action_just_pressed('throw'):
+		current_state = ENUMS.player_state.THROWING
+		shoot_projectile()
+		return
 	if Input.is_action_just_pressed("jump"):
 		jump_buffer_timer = JUMP_BUFFER_TIME
 	if (coyote_timer > 0 or is_on_floor()) and jump_buffer_timer > 0:
@@ -99,6 +109,10 @@ func handle_idle_state(delta):
 
 func handle_running_state(delta):
 	handle_input(delta)
+	if Input.is_action_just_pressed('throw'):
+		current_state = ENUMS.player_state.THROWING
+		shoot_projectile()
+		return
 	if Input.is_action_just_pressed("jump"):
 		jump_buffer_timer = JUMP_BUFFER_TIME
 	if (coyote_timer > 0 or is_on_floor()) and jump_buffer_timer > 0:
@@ -118,6 +132,12 @@ func handle_hurting(delta):
 	handle_input(delta)
 	hurt_timer -= delta
 	if hurt_timer <= 0:
+		current_state = ENUMS.player_state.IDLE
+
+func handle_throwing_state(delta):
+	velocity.x = 0
+	throw_timer -= delta
+	if throw_timer <= 0:
 		current_state = ENUMS.player_state.IDLE
 
 func handle_jumping_state(delta):
@@ -237,4 +257,16 @@ func take_damage(amount: int):
 		push_character(50)
 		UTIL.freeze_frame(0.2, HURT_TIME)
 		current_state = ENUMS.player_state.HURTING
-		health_component.take_damage(amount)  
+		health_component.take_damage(amount)
+		
+
+func shoot_projectile():
+	throw_timer = THROW_TIME
+	var polearm_instance = polearm.instantiate()
+	polearm_instance.damage = POLEARM_THROW_DAMAGE
+	get_tree().current_scene.add_child(polearm_instance)  
+
+	polearm_instance.global_position = global_position  
+	
+	var mouse_pos = get_global_mouse_position()
+	polearm_instance.direction = (mouse_pos - global_position).normalized()

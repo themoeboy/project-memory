@@ -11,7 +11,6 @@ outline_size = 2
 script = ExtResource("1_ynrea")
 
 [node name="health_label" type="Label" parent="."]
-visible = false
 offset_left = 7.0
 offset_top = -1.0
 offset_right = 29.0
