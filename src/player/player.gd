@@ -77,6 +77,9 @@ func _physics_process(delta):
 	move_and_slide()
 	handle_direction()
 	
+	#Update Globals
+	UTIL.player_pos = position
+	
 	# Debugging
 	#print("Velocity: ", velocity)
 	#print("Coyote Timer: ", coyote_timer)
