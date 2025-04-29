@@ -12,15 +12,19 @@ a = Vector2(-1, 1)
 b = Vector2(15, 17)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_cjcwe"]
-a = Vector2(0, -5)
-b = Vector2(16, 11)
+b = Vector2(16, 16)
 
 [node name="polearm" type="Node2D"]
+position = Vector2(0, 2.38419e-07)
+rotation = -3.92699
 script = ExtResource("1_fgjkf")
+turn_speed = 10.0
+arc_weight = 0.35
 
 [node name="sprite" type="Sprite2D" parent="."]
 texture_filter = 2
 material = SubResource("ShaderMaterial_cjcwe")
+position = Vector2(8, 8)
 texture = ExtResource("2_wh4gw")
 
 [node name="hitbox" type="Area2D" parent="."]
@@ -28,13 +32,12 @@ collision_layer = 8
 collision_mask = 8
 
 [node name="collision" type="CollisionShape2D" parent="hitbox"]
-position = Vector2(-7, -9)
+position = Vector2(1, -1)
 shape = SubResource("SegmentShape2D_sdp0l")
 
 [node name="retrievebox" type="Area2D" parent="."]
 
 [node name="collision" type="CollisionShape2D" parent="retrievebox"]
-position = Vector2(-8, -3)
 shape = SubResource("SegmentShape2D_cjcwe")
 debug_color = Color(0.613875, 0.381492, 0.95523, 0.42)
 

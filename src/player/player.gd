@@ -227,12 +227,14 @@ func double_jump():
 	current_state = ENUMS.player_state.DOUBLE_JUMPING
 
 func dash():
-	pre_dash_velocity = velocity.x
+	var to_polearm = (UTIL.polearm_pos - global_position).normalized()
+
 	current_state = ENUMS.player_state.DASHING
 	dash_attack_area.monitoring = true  # Enable attack detection
 	dash_timer = DASH_TIME
-	velocity.x = last_direction * DASH_SPEED
 
+	# Apply velocity toward polearm
+	velocity = to_polearm * DASH_SPEED
 	
 func handle_direction():
 	if input_direction != 0 and input_direction != last_direction:

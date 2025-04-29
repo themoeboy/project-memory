@@ -19,3 +19,9 @@ enum enemy_behavior {
 	FLY,
 	IDLE
 }
+
+enum polearm_state {
+ 	PIERCING,
+	PAUSE,
+	RETURN
+}

@@ -1,6 +1,7 @@
 extends Node
 
 var player_pos
+var polearm_pos
 
 func freeze_frame(timescale: float, duration: float ) -> void:
 	Engine.time_scale = timescale
