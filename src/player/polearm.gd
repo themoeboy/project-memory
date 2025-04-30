@@ -7,7 +7,11 @@ extends Node2D
 @export var recoil_pause_duration: float = 0.2    # Hang time after piercing
 @export var turn_speed: float = 5.0               # Smooth turning
 @export var arc_weight: float = 0.5  # 0 = straight to player, 1 = full upward
+@export var shrink_peak = 0.25
+@export var shrink_rate = 25.0
+@export var grow_rate = 25.0
 
+var shrinking = true  
 var direction: Vector2
 var damage: int = 0
 var current_speed: float = 0
@@ -17,7 +21,7 @@ var recoil_timer: float = 0.0
 var recoil_phase = ENUMS.polearm_state.PIERCING
 var arc_blend_factor: float = 1.0
 
-@export var blend_decay_rate: float = 1.5  # Decay over ~0.7 sec
+@export var blend_decay_rate: float = 1.5  
 
 @onready var collision = $hitbox/collision
 @onready var hitbox = $hitbox
@@ -61,7 +65,17 @@ func _physics_process(delta):
 
 				# Smoothly turn toward the curved direction
 				direction = direction.slerp(curved_direction, turn_speed * delta).normalized()
-
+				
+				if shrinking:
+					scale = scale.lerp(Vector2(shrink_peak, shrink_peak), shrink_rate * delta)
+					
+					if scale.distance_to(Vector2(shrink_peak, shrink_peak)) < 0.01:
+						scale = Vector2(shrink_peak, shrink_peak)  # Snap to target
+						shrinking = false
+				else:
+					scale = scale.lerp(Vector2(1, 1), shrink_rate * delta)
+				print(scale)
+					
 				# Rotate visual toward direction
 				rotation = direction.angle()
 

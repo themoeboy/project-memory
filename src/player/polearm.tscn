@@ -19,7 +19,10 @@ position = Vector2(0, 2.38419e-07)
 rotation = -3.92699
 script = ExtResource("1_fgjkf")
 turn_speed = 10.0
-arc_weight = 0.35
+arc_weight = 0.25
+shrink_rate = 15.0
+grow_rate = 5.0
+blend_decay_rate = 4.0
 
 [node name="sprite" type="Sprite2D" parent="."]
 texture_filter = 2
