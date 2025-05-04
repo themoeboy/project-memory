@@ -36,6 +36,8 @@ var last_direction = 1
 @onready var collision_area = $collision
 @onready var hitbox_area = $hitbox
 @onready var polearm = preload("res://src/player/polearm.tscn")
+@onready var animation = $animation
+
 
 func _ready():
 	health_component.health_changed.connect(_on_health_changed)  
@@ -88,6 +90,12 @@ func _physics_process(delta):
 	#print("las dir ", last_direction)
 	#print("scale x ", scale.x)
 	
+func go_to_state(state):
+	match state:
+		ENUMS.player_state.IDLE:
+			current_state = ENUMS.player_state.IDLE
+			animation.play("idle")
+
 func handle_idle_state(delta):
 	handle_input(delta)
 	if Input.is_action_just_pressed('throw'):
@@ -107,7 +115,7 @@ func handle_idle_state(delta):
 			if abs(velocity.x) > 0:
 				current_state = ENUMS.player_state.RUNNING
 			else:
-				current_state = ENUMS.player_state.IDLE
+				go_to_state(ENUMS.player_state.IDLE)
 		
 
 func handle_running_state(delta):

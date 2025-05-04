@@ -1,12 +1,50 @@
-[gd_scene load_steps=13 format=3 uid="uid://l85yqf8v2y5"]
+[gd_scene load_steps=16 format=3 uid="uid://l85yqf8v2y5"]
 
 [ext_resource type="Script" uid="uid://beguc8jpyxdxe" path="res://src/player/player.gd" id="1_s5dbj"]
-[ext_resource type="Texture2D" uid="uid://d2kc76agu1esh" path="res://assets/draft/player-idle-draft.png" id="2_jiejy"]
 [ext_resource type="Shader" uid="uid://bmpheaqyydsok" path="res://src/shaders/smooth_pixel.gdshader" id="2_o822w"]
 [ext_resource type="Script" uid="uid://cd8dp7mscgy0y" path="res://src/helpers/attack.gd" id="3_mf2ua"]
+[ext_resource type="Texture2D" uid="uid://3ev8fpeatyil" path="res://assets/draft/player-idle-sheet.png" id="3_o822w"]
 [ext_resource type="PackedScene" uid="uid://dne4rabaer156" path="res://src/helpers/health.tscn" id="4_244u8"]
 [ext_resource type="Script" uid="uid://b8l7epw8fyidg" path="res://src/player/hitbox.gd" id="5_5f2sf"]
 [ext_resource type="Script" uid="uid://buk6lsoqwwf6r" path="res://src/player/test.gd" id="6_jiejy"]
+
+[sub_resource type="Animation" id="Animation_o822w"]
+resource_name = "idle"
+length = 0.75
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 2, 1]
+}
+
+[sub_resource type="Animation" id="Animation_x42xx"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_x42xx"]
+_data = {
+&"RESET": SubResource("Animation_x42xx"),
+&"idle": SubResource("Animation_o822w")
+}
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_eewmr"]
 size = Vector2(16.75, 19.75)
@@ -32,6 +70,11 @@ GRAVITY = 1500.0
 JUMP_FORCE = -300.0
 THROW_TIME = 0.1
 
+[node name="animation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_x42xx")
+}
+
 [node name="collision" type="CollisionShape2D" parent="."]
 position = Vector2(1, -1)
 shape = SubResource("RectangleShape2D_eewmr")
@@ -40,7 +83,8 @@ shape = SubResource("RectangleShape2D_eewmr")
 texture_filter = 2
 material = SubResource("ShaderMaterial_x42xx")
 position = Vector2(0, -7)
-texture = ExtResource("2_jiejy")
+texture = ExtResource("3_o822w")
+hframes = 3
 
 [node name="camera" type="Camera2D" parent="."]
 offset = Vector2(60, -60)
