@@ -31,7 +31,7 @@ func _ready():
 
 func _physics_process(delta):
 	UTIL.polearm_pos = position
-
+	
 	if hit:
 		recoil_timer -= delta
 
@@ -46,9 +46,12 @@ func _physics_process(delta):
 					position += direction * current_speed * delta
 
 			ENUMS.polearm_state.PAUSE:  #  Hang Phase
+				UTIL.polearm_paused_pos = position
+				UTIL.can_dash = true
 				if recoil_timer <= 0:
 					recoil_phase = ENUMS.polearm_state.RETURN
 					recoiling = true
+					UTIL.can_dash = false
 					current_speed = 0
 				# No movement during hang
 

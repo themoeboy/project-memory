@@ -26,7 +26,8 @@ var hurt_timer = 0.0
 var throw_timer = 0.0
 var can_double_jump = true
 var input_direction = 0
-var last_direction = 1 
+var last_direction = 1
+var polearm_instance
 
 
 @onready var ray_cast_2d_left = $RayCast2D_left
@@ -187,14 +188,17 @@ func handle_dashing_state(delta):
 	hitbox_area.monitoring = false  # Be immune to damage on dash
 	set_collision_layer_value(1, false)
 	set_collision_mask_value(2, false)
-
-	if dash_timer <= 0:
+	
+	var polearm_pos = UTIL.polearm_paused_pos if UTIL.polearm_paused_pos != null else UTIL.polearm_pos  
+	
+	if dash_timer <= 0 or global_position.distance_to(polearm_pos) < 1:
 		hitbox_area.monitoring = true  # Be immune to damage on dash
 		dash_attack_area.monitoring = false  # Disable attack after dash ends
 		current_state = ENUMS.player_state.IDLE
 		set_collision_layer_value(1, true)  # Disable collision on layer 0
 		set_collision_mask_value(2 , true)   # Stop detecting layer 0
-		velocity.x = pre_dash_velocity
+		velocity = Vector2.ZERO
+		global_position = UTIL.polearm_pos
 
 func handle_double_jumping_state(delta):
 	handle_jumping_state(delta)
@@ -235,14 +239,24 @@ func double_jump():
 	current_state = ENUMS.player_state.DOUBLE_JUMPING
 
 func dash():
-	var to_polearm = (UTIL.polearm_pos - global_position).normalized()
+	if(UTIL.can_dash):
+		var to_polearm_vec = Vector2(0,0)
+		
+		if UTIL.polearm_paused_pos:
+			to_polearm_vec = UTIL.polearm_paused_pos - global_position
+		else:
+			to_polearm_vec = UTIL.polearm_pos - global_position
+		var distance = to_polearm_vec.length()
+		var direction = to_polearm_vec.normalized()
 
-	current_state = ENUMS.player_state.DASHING
-	dash_attack_area.monitoring = true  # Enable attack detection
-	dash_timer = DASH_TIME
-
-	# Apply velocity toward polearm
-	velocity = to_polearm * DASH_SPEED
+		current_state = ENUMS.player_state.DASHING
+		dash_attack_area.monitoring = true
+		
+		if polearm_instance:
+			polearm_instance.queue_free()
+			
+		velocity = direction * DASH_SPEED
+		dash_timer = distance / DASH_SPEED  # Duration needed
 	
 func handle_direction():
 	if input_direction != 0 and input_direction != last_direction:
@@ -275,7 +289,7 @@ func take_damage(amount: int):
 
 func shoot_projectile():
 	throw_timer = THROW_TIME
-	var polearm_instance = polearm.instantiate()
+	polearm_instance = polearm.instantiate()
 	polearm_instance.damage = POLEARM_THROW_DAMAGE
 	get_tree().current_scene.add_child(polearm_instance)  
 
