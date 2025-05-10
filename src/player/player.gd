@@ -35,9 +35,10 @@ var polearm_instance
 @onready var health_component = $health  
 @onready var dash_attack_area = $dash_attack 
 @onready var collision_area = $collision
-@onready var hitbox_area = $hitbox
+@onready var hurtbox_area = $hurtbox
 @onready var polearm = preload("res://src/player/polearm.tscn")
 @onready var animation = $animation
+@onready var sprite = $sprite
 
 
 func _ready():
@@ -185,20 +186,20 @@ func handle_falling_state(delta):
 
 func handle_dashing_state(delta):
 	dash_timer -= delta
-	hitbox_area.monitoring = false  # Be immune to damage on dash
+	hurtbox_area.monitoring = false  # Be immune to damage on dash
 	set_collision_layer_value(1, false)
 	set_collision_mask_value(2, false)
 	
 	var polearm_pos = UTIL.polearm_paused_pos if UTIL.polearm_paused_pos != null else UTIL.polearm_pos  
 	
 	if dash_timer <= 0 or global_position.distance_to(polearm_pos) < 1:
-		hitbox_area.monitoring = true  # Be immune to damage on dash
+		hurtbox_area.monitoring = true  # Be immune to damage on dash
 		dash_attack_area.monitoring = false  # Disable attack after dash ends
 		current_state = ENUMS.player_state.IDLE
-		set_collision_layer_value(1, true)  # Disable collision on layer 0
-		set_collision_mask_value(2 , true)   # Stop detecting layer 0
+		set_collision_layer_value(1, true) 
+		set_collision_mask_value(2 , true)   
 		velocity = Vector2.ZERO
-		global_position = UTIL.polearm_pos
+		global_position = polearm_pos
 
 func handle_double_jumping_state(delta):
 	handle_jumping_state(delta)
@@ -257,6 +258,7 @@ func dash():
 			
 		velocity = direction * DASH_SPEED
 		dash_timer = distance / DASH_SPEED  # Duration needed
+		UTIL.can_dash = false
 	
 func handle_direction():
 	if input_direction != 0 and input_direction != last_direction:
@@ -270,6 +272,7 @@ func handle_direction():
 		
 func push_character(x: int):
 	print(last_direction)
+	print(x)
 	velocity.x = last_direction * x
 
 func _on_health_changed(new_health):
@@ -282,6 +285,7 @@ func take_damage(amount: int):
 	if current_state != ENUMS.player_state.HURTING:
 		hurt_timer = HURT_TIME
 		push_character(50)
+		UTIL.flash_blinking(sprite, 0.3, 0.1)
 		UTIL.freeze_frame(0.2, HURT_TIME)
 		current_state = ENUMS.player_state.HURTING
 		health_component.take_damage(amount)

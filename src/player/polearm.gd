@@ -93,7 +93,7 @@ func _physics_process(delta):
 
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	var enemy = area.get_parent()
-	if area.name == 'hitbox' and enemy.has_method("take_damage") and enemy.is_in_group('enemy') and not hit:
+	if  enemy.has_method("take_damage") and enemy.is_in_group('enemy') and not hit:
 		enemy.take_damage(damage)
 		hit = true
 		recoil_phase = 0
