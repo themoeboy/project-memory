@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=4 uid="uid://c1xp2narxicdy"]
+[gd_scene load_steps=9 format=4 uid="uid://c1xp2narxicdy"]
 
 [ext_resource type="Shader" uid="uid://bmpheaqyydsok" path="res://src/shaders/smooth_pixel.gdshader" id="1_fyndt"]
 [ext_resource type="TileSet" uid="uid://chudq30gk5gim" path="res://assets/tileset/version1.tres" id="1_lsuuv"]
 [ext_resource type="PackedScene" uid="uid://l85yqf8v2y5" path="res://src/player/player.tscn" id="2_aa85e"]
 [ext_resource type="Texture2D" uid="uid://dbd2b6xvi7i3o" path="res://assets/draft/bg-black.png" id="4_3cfgd"]
+[ext_resource type="PackedScene" uid="uid://ch3x7rbdp282f" path="res://src/objects/item.tscn" id="5_fyndt"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kmhfv"]
 shader = ExtResource("1_fyndt")
@@ -43,3 +44,12 @@ scale = Vector2(5, 5)
 texture = ExtResource("4_3cfgd")
 centered = false
 region_rect = Rect2(0, 0, 320, 180)
+
+[node name="item" parent="." instance=ExtResource("5_fyndt")]
+position = Vector2(249, 246)
+
+[node name="item2" parent="." instance=ExtResource("5_fyndt")]
+position = Vector2(330, 246)
+
+[node name="item3" parent="." instance=ExtResource("5_fyndt")]
+position = Vector2(290, 246)

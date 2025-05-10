@@ -61,6 +61,11 @@ run={
 "events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":2,"position":Vector2(160, 20),"global_position":Vector2(169, 68),"factor":1.0,"button_index":2,"canceled":false,"pressed":true,"double_click":false,"script":null)
 ]
 }
+gather={
+"deadzone": 0.2,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":1,"position":Vector2(120, 15),"global_position":Vector2(129, 63),"factor":1.0,"button_index":1,"canceled":false,"pressed":true,"double_click":false,"script":null)
+]
+}
 
 [layer_names]
 
@@ -71,6 +76,10 @@ run={
 2d_physics/layer_5="enemy_hurtbox"
 2d_physics/layer_6="player_hitbox"
 2d_physics/layer_7="player_hurtbox"
+2d_physics/layer_8="item_hitbox"
+2d_physics/layer_9="item_hurtbox"
+2d_physics/layer_10="player_interactbox"
+2d_physics/layer_11="item_interactbox"
 
 [rendering]
 

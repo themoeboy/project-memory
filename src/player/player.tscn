@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://l85yqf8v2y5"]
+[gd_scene load_steps=17 format=3 uid="uid://l85yqf8v2y5"]
 
 [ext_resource type="Script" uid="uid://beguc8jpyxdxe" path="res://src/player/player.gd" id="1_s5dbj"]
 [ext_resource type="Shader" uid="uid://bmpheaqyydsok" path="res://src/shaders/smooth_pixel.gdshader" id="2_o822w"]
@@ -63,6 +63,9 @@ font_size = 8
 font_color = Color(0, 0, 0, 1)
 outline_size = 2
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o822w"]
+size = Vector2(20, 102)
+
 [node name="player" type="CharacterBody2D"]
 collision_mask = 6
 script = ExtResource("1_s5dbj")
@@ -112,7 +115,7 @@ collision_layer = 64
 collision_mask = 8
 script = ExtResource("5_5f2sf")
 
-[node name="hitbox" type="CollisionShape2D" parent="hurtbox"]
+[node name="hurtbox" type="CollisionShape2D" parent="hurtbox"]
 position = Vector2(1, -1)
 shape = SubResource("RectangleShape2D_5f2sf")
 debug_color = Color(0.604464, 0.366649, 0.99886, 0.42)
@@ -125,5 +128,14 @@ offset_bottom = -23.0
 label_settings = SubResource("LabelSettings_jiejy")
 script = ExtResource("6_jiejy")
 
+[node name="gather_area" type="Area2D" parent="."]
+collision_layer = 512
+collision_mask = 1024
+
+[node name="gather_area" type="CollisionShape2D" parent="gather_area"]
+position = Vector2(14, -42)
+shape = SubResource("RectangleShape2D_o822w")
+
 [connection signal="area_entered" from="dash_attack" to="dash_attack" method="_on_area_entered"]
 [connection signal="area_entered" from="hurtbox" to="hurtbox" method="_on_area_entered"]
+[connection signal="area_entered" from="gather_area" to="." method="_on_gather_area_area_entered"]

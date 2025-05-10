@@ -42,6 +42,7 @@ var polearm_instance
 @onready var polearm = preload("res://src/player/polearm.tscn")
 @onready var animation = $animation
 @onready var sprite = $sprite
+@onready var gather_area = $gather_area
 
 
 func _ready():
@@ -49,6 +50,7 @@ func _ready():
 	health_component.now_dead.connect(_on_death) 
 	
 func _physics_process(delta):
+	view_items()
 	# Update timers
 	if is_on_floor():
 		coyote_timer = COYOTE_TIME
@@ -288,7 +290,7 @@ func take_damage(amount: int):
 		UTIL.freeze_frame(0.2, HURT_TIME)
 		current_state = ENUMS.player_state.HURTING
 		health_component.take_damage(amount)
-		
+	
 
 func shoot_projectile():
 	throw_timer = THROW_TIME
@@ -300,3 +302,15 @@ func shoot_projectile():
 	
 	var mouse_pos = get_global_mouse_position()
 	polearm_instance.direction = (mouse_pos - global_position).normalized()
+
+
+func _on_gather_area_area_entered(area: Area2D) -> void:
+	print(area.name)
+	if area.has_method("gather"):
+		area.gather()
+
+func view_items():
+	for gatherable in gather_area.get_overlapping_areas():
+			if gatherable.has_method('gather') and  Input.is_action_just_pressed("gather"):
+					gatherable.gather()
+						
