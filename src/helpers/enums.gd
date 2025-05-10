@@ -2,6 +2,7 @@ extends Node
 
 enum player_state {
 	IDLE,
+	WALKING,
 	RUNNING,
 	JUMPING,
 	FALLING,

@@ -2,11 +2,14 @@ extends CharacterBody2D
 
 # Constants
 @export var GRAVITY = 2000.0
-@export var MAX_SPEED = 150.0
+@export var MAX_SPEED = 200.0
+@export var MAX_WALKING_SPEED = 50.0
+@export var WALKING_ACCELERATION = 50.0
+@export var WALKING_DEACCELERATION = 100.0
+@export var RUNNING_ACCELERATION = 50.0
 @export var JUMP_FORCE = -500.0
 @export var DASH_SPEED = 400.0
 @export var DASH_DAMAGE = 20
-@export var ACCELERATION = 200.0
 @export var DEACCELERATION = 1000.0
 @export var COYOTE_TIME = 0.2
 @export var JUMP_BUFFER_TIME = 0.1
@@ -17,7 +20,7 @@ extends CharacterBody2D
 @export var POLEARM_THROW_DAMAGE = 10.0
 
 # Variables
-var current_state = ENUMS.player_state.IDLE
+var current_state = ENUMS.player_state.WALKING
 var coyote_timer = 0.0
 var jump_buffer_timer = 0.0
 var dash_timer = 0.0
@@ -60,6 +63,8 @@ func _physics_process(delta):
 	match current_state:
 		ENUMS.player_state.IDLE:
 			handle_idle_state(delta)
+		ENUMS.player_state.WALKING:
+			handle_walking_state(delta)
 		ENUMS.player_state.RUNNING:
 			handle_running_state(delta)
 		ENUMS.player_state.JUMPING:
@@ -120,26 +125,20 @@ func handle_idle_state(delta):
 				go_to_state(ENUMS.player_state.IDLE)
 		
 
+func handle_walking_state(delta):
+	if Input.is_action_just_pressed('run'):
+		current_state = ENUMS.player_state.RUNNING
+	if (velocity.x <= MAX_WALKING_SPEED):
+		velocity.x = move_toward(velocity.x, MAX_WALKING_SPEED, WALKING_ACCELERATION * delta)
+	else:
+		velocity.x = move_toward(velocity.x, MAX_WALKING_SPEED, WALKING_DEACCELERATION * delta)
+	return
+
 func handle_running_state(delta):
-	handle_input(delta)
-	if Input.is_action_just_pressed('throw'):
-		current_state = ENUMS.player_state.THROWING
-		shoot_projectile()
-		return
-	if Input.is_action_just_pressed("jump"):
-		jump_buffer_timer = JUMP_BUFFER_TIME
-	if (coyote_timer > 0 or is_on_floor()) and jump_buffer_timer > 0:
-		jump()
-		jump_buffer_timer = 0
-		return
-	if Input.is_action_just_pressed("dash"):
-		dash()
-		return
-	if is_on_floor():
-			if abs(velocity.x) > 0:
-				current_state = ENUMS.player_state.RUNNING
-			else:
-				current_state = ENUMS.player_state.IDLE
+	velocity.x = move_toward(velocity.x, MAX_SPEED, RUNNING_ACCELERATION * delta)
+	if Input.is_action_just_released('run'):
+		current_state = ENUMS.player_state.WALKING
+	return
 
 func handle_hurting(delta):
 	handle_input(delta)
@@ -221,7 +220,7 @@ func handle_input(delta):
 		velocity.x = 0
 	# Otherwise apply normal acceleration/deceleration
 	elif input_direction != 0:
-		velocity.x = move_toward(velocity.x, input_direction * MAX_SPEED, ACCELERATION * delta)
+		velocity.x = move_toward(velocity.x, input_direction * MAX_SPEED, RUNNING_ACCELERATION * delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0, DEACCELERATION * delta)
 

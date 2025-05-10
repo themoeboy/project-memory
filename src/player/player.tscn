@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://beguc8jpyxdxe" path="res://src/player/player.gd" id="1_s5dbj"]
 [ext_resource type="Shader" uid="uid://bmpheaqyydsok" path="res://src/shaders/smooth_pixel.gdshader" id="2_o822w"]
 [ext_resource type="Script" uid="uid://cd8dp7mscgy0y" path="res://src/helpers/attack.gd" id="3_mf2ua"]
-[ext_resource type="Texture2D" uid="uid://3ev8fpeatyil" path="res://assets/draft/player-idle-sheet.png" id="3_o822w"]
+[ext_resource type="Texture2D" uid="uid://bkmbbdhketc0y" path="res://assets/draft/player-animation-sheet.png" id="3_o822w"]
 [ext_resource type="PackedScene" uid="uid://dne4rabaer156" path="res://src/helpers/health.tscn" id="4_244u8"]
 [ext_resource type="Script" uid="uid://b8l7epw8fyidg" path="res://src/player/hitbox.gd" id="5_5f2sf"]
 [ext_resource type="Script" uid="uid://buk6lsoqwwf6r" path="res://src/player/test.gd" id="6_jiejy"]
