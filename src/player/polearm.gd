@@ -77,7 +77,6 @@ func _physics_process(delta):
 						shrinking = false
 				else:
 					scale = scale.lerp(Vector2(1, 1), shrink_rate * delta)
-				print(scale)
 					
 				# Rotate visual toward direction
 				rotation = direction.angle()

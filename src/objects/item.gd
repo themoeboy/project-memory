@@ -1,7 +1,7 @@
 extends Area2D
 
-@onready var item_name: String = "lamp"
 @onready var sprite: Sprite2D = $sprite
+var item_name: String = "orange"
 
 func _ready():
 	if item_name != "":
@@ -11,7 +11,6 @@ func _ready():
 			sprite.texture = texture
 		else:
 			print("❌ Could not load item sprite:", path)
-
 func gather():
 	if(Input.is_action_pressed("gather")):
 		queue_free()

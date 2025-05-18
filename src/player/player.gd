@@ -47,7 +47,7 @@ var polearm_instance
 
 func _ready():
 	health_component.health_changed.connect(_on_health_changed)  
-	health_component.now_dead.connect(_on_death) 
+	health_component.now_dead.connect(_on_death)
 	
 func _physics_process(delta):
 	view_items()
@@ -272,8 +272,6 @@ func handle_direction():
 		last_direction = input_direction
 		
 func push_character(x: int):
-	print(last_direction)
-	print(x)
 	velocity.x = last_direction * x
 
 func _on_health_changed(new_health):
@@ -305,7 +303,6 @@ func shoot_projectile():
 
 
 func _on_gather_area_area_entered(area: Area2D) -> void:
-	print(area.name)
 	if area.has_method("gather"):
 		area.gather()
 
