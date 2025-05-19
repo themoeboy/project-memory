@@ -56,11 +56,12 @@ func _physics_process(delta):
 		coyote_timer = COYOTE_TIME
 		can_double_jump = true
 	else:
+		velocity.y += GRAVITY * delta
 		coyote_timer -= delta
 
 	if jump_buffer_timer > 0:
 		jump_buffer_timer -= delta
-		
+	
 	# State handling
 	match current_state:
 		ENUMS.player_state.IDLE:
@@ -101,9 +102,23 @@ func _physics_process(delta):
 	
 func go_to_state(state):
 	match state:
-		ENUMS.player_state.IDLE:
-			current_state = ENUMS.player_state.IDLE
-			animation.play("idle")
+		ENUMS.player_state.RUNNING:
+			current_state = ENUMS.player_state.RUNNING
+			animation.play("run")
+		ENUMS.player_state.WALKING:
+			current_state = ENUMS.player_state.WALKING
+			animation.play("walk")
+		ENUMS.player_state.JUMPING:
+			jump_buffer_timer = JUMP_BUFFER_TIME
+			jump()
+			current_state = ENUMS.player_state.JUMPING
+			animation.play("jump")
+		ENUMS.player_state.DOUBLE_JUMPING:
+			double_jump()
+			current_state = ENUMS.player_state.DOUBLE_JUMPING
+		
+	
+	
 
 func handle_idle_state(delta):
 	handle_input(delta)
@@ -129,7 +144,9 @@ func handle_idle_state(delta):
 
 func handle_walking_state(delta):
 	if Input.is_action_just_pressed('run'):
-		current_state = ENUMS.player_state.RUNNING
+		go_to_state(ENUMS.player_state.RUNNING)
+	if Input.is_action_just_pressed('jump'):
+		go_to_state(ENUMS.player_state.JUMPING)
 	if (velocity.x <= MAX_WALKING_SPEED):
 		velocity.x = move_toward(velocity.x, MAX_WALKING_SPEED, WALKING_ACCELERATION * delta)
 	else:
@@ -139,8 +156,29 @@ func handle_walking_state(delta):
 func handle_running_state(delta):
 	velocity.x = move_toward(velocity.x, MAX_SPEED, RUNNING_ACCELERATION * delta)
 	if Input.is_action_just_released('run'):
-		current_state = ENUMS.player_state.WALKING
+		go_to_state(ENUMS.player_state.WALKING)
+	if Input.is_action_just_pressed('jump'):
+		go_to_state(ENUMS.player_state.JUMPING)
 	return
+
+
+func handle_jumping_state(delta):
+	if Input.is_action_just_pressed("jump") and can_double_jump:
+		go_to_state(ENUMS.player_state.DOUBLE_JUMPING)
+		return
+	if is_on_floor():
+		go_to_state(ENUMS.player_state.WALKING)
+		return
+
+func jump():
+	velocity.y = JUMP_FORCE
+
+func handle_double_jumping_state(delta):
+	handle_jumping_state(delta)
+
+func double_jump():
+	velocity.y = JUMP_FORCE
+	can_double_jump = false
 
 func handle_hurting(delta):
 	handle_input(delta)
@@ -148,29 +186,14 @@ func handle_hurting(delta):
 	if hurt_timer <= 0:
 		current_state = ENUMS.player_state.IDLE
 
+
+
+
 func handle_throwing_state(delta):
 	velocity.x = 0
 	throw_timer -= delta
 	if throw_timer <= 0:
 		current_state = ENUMS.player_state.IDLE
-
-func handle_jumping_state(delta):
-	handle_input(delta)
-	if not Input.is_action_pressed("jump") and velocity.y < 0:
-		velocity.y *= 0.5
-	if Input.is_action_just_pressed("dash"):
-		dash()
-		return
-	if Input.is_action_just_pressed("jump") and can_double_jump:
-		double_jump()
-		return
-	if is_on_floor():
-		if abs(velocity.x) > 0:
-			current_state = ENUMS.player_state.RUNNING
-		else:
-			current_state = ENUMS.player_state.IDLE
-	if velocity.y > 0:
-		current_state = ENUMS.player_state.FALLING
 
 
 func handle_falling_state(delta):
@@ -202,8 +225,7 @@ func handle_dashing_state(delta):
 		velocity = Vector2.ZERO
 		global_position = polearm_pos
 
-func handle_double_jumping_state(delta):
-	handle_jumping_state(delta)
+
 
 func handle_wall_sliding_state(delta):
 	velocity.y = min(velocity.y, WALL_SLIDE_SPEED)
@@ -227,18 +249,9 @@ func handle_input(delta):
 		velocity.x = move_toward(velocity.x, 0, DEACCELERATION * delta)
 
 	# Apply gravity
-	if not is_on_floor():
-		velocity.y += GRAVITY * delta
-
-func jump():
-	current_state = ENUMS.player_state.JUMPING
-	velocity.y = JUMP_FORCE
 
 
-func double_jump():
-	velocity.y = JUMP_FORCE
-	can_double_jump = false
-	current_state = ENUMS.player_state.DOUBLE_JUMPING
+
 
 func dash():
 	if(UTIL.can_dash):

@@ -63,8 +63,8 @@ font_size = 8
 font_color = Color(0, 0, 0, 1)
 outline_size = 2
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_o822w"]
-size = Vector2(20, 102)
+[sub_resource type="CircleShape2D" id="CircleShape2D_o822w"]
+radius = 21.0
 
 [node name="player" type="CharacterBody2D"]
 collision_mask = 6
@@ -93,9 +93,9 @@ hframes = 3
 [node name="camera" type="Camera2D" parent="."]
 offset = Vector2(60, -60)
 process_callback = 0
-position_smoothing_enabled = true
 drag_vertical_enabled = true
-drag_bottom_margin = 0.0
+drag_top_margin = 1.0
+drag_bottom_margin = 1.0
 
 [node name="dash_attack" type="Area2D" parent="."]
 collision_layer = 32
@@ -133,8 +133,8 @@ collision_layer = 512
 collision_mask = 1024
 
 [node name="gather_area" type="CollisionShape2D" parent="gather_area"]
-position = Vector2(14, -42)
-shape = SubResource("RectangleShape2D_o822w")
+position = Vector2(1, 0)
+shape = SubResource("CircleShape2D_o822w")
 
 [connection signal="area_entered" from="dash_attack" to="dash_attack" method="_on_area_entered"]
 [connection signal="area_entered" from="hurtbox" to="hurtbox" method="_on_area_entered"]
