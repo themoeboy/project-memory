@@ -1,6 +1,7 @@
 extends Node
 
 var player_pos
+var player_ref
 var polearm_pos
 var polearm_paused_pos
 var can_dash : bool = false 

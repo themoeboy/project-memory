@@ -91,6 +91,7 @@ func _physics_process(delta):
 	
 	#Update Globals
 	UTIL.player_pos = position
+	UTIL.player_ref = self
 	
 	# Debugging
 	#print("Velocity: ", velocity)
