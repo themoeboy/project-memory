@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://l85yqf8v2y5"]
+[gd_scene load_steps=18 format=3 uid="uid://l85yqf8v2y5"]
 
 [ext_resource type="Script" uid="uid://beguc8jpyxdxe" path="res://src/player/player.gd" id="1_s5dbj"]
 [ext_resource type="Shader" uid="uid://bmpheaqyydsok" path="res://src/shaders/smooth_pixel.gdshader" id="2_o822w"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dne4rabaer156" path="res://src/helpers/health.tscn" id="4_244u8"]
 [ext_resource type="Script" uid="uid://b8l7epw8fyidg" path="res://src/player/hitbox.gd" id="5_5f2sf"]
 [ext_resource type="Script" uid="uid://buk6lsoqwwf6r" path="res://src/player/test.gd" id="6_jiejy"]
+[ext_resource type="Texture2D" uid="uid://dy8y7g7riyrss" path="res://assets/player/player.png" id="8_x42xx"]
 
 [sub_resource type="Animation" id="Animation_x42xx"]
 length = 0.001
@@ -85,6 +86,7 @@ position = Vector2(1, -1)
 shape = SubResource("RectangleShape2D_eewmr")
 
 [node name="sprite" type="Sprite2D" parent="."]
+visible = false
 texture_filter = 2
 material = SubResource("ShaderMaterial_x42xx")
 position = Vector2(0, -7)
@@ -136,6 +138,10 @@ collision_mask = 1024
 [node name="gather_area" type="CollisionShape2D" parent="gather_area"]
 position = Vector2(1, 0)
 shape = SubResource("CircleShape2D_o822w")
+
+[node name="tempsprite" type="Sprite2D" parent="."]
+position = Vector2(0, -7)
+texture = ExtResource("8_x42xx")
 
 [connection signal="area_entered" from="dash_attack" to="dash_attack" method="_on_area_entered"]
 [connection signal="area_entered" from="hurtbox" to="hurtbox" method="_on_area_entered"]
