@@ -2,9 +2,13 @@ extends Node2D
 
 @export var player_scene: PackedScene
 @export var chunk_scene: PackedScene
+@export var projectile_scene: PackedScene
 @export var chunk_length: int = 512
 @export var preload_chunks: int = 5
 @export var finish_distance: int = 10000
+@onready var projectile_timer = $projectile_timer
+@export var projectile_spawn_distance: float = 300  # How far to the right of player to spawn
+@export var projectile_vertical_variance_max: float = 48
 
 var player_ref
 var last_chunk_x = 0
@@ -15,7 +19,8 @@ func _ready():
 		spawn_chunk(i * chunk_length)
 
 	spawn_player()
-
+	randomize_timer()
+	
 func _process(_delta):
 	if player_ref:
 		var player_x = player_ref.global_position.x
@@ -51,3 +56,28 @@ func cleanup_chunks(player_x):
 			if chunk.global_position.x + chunk_length < player_x - chunk_length:
 				chunk.queue_free()
 	chunks = chunks.filter(func(c): return is_instance_valid(c))
+
+func spawn_projectile():
+	if not UTIL.player_ref:
+		return
+
+	var projectile = projectile_scene.instantiate()
+	
+	var spawn_x = UTIL.player_ref.global_position.x + projectile_spawn_distance
+	var spawn_y = UTIL.player_ref.global_position.y + randf_range(-projectile_vertical_variance_max, 0) 
+	projectile.global_position = Vector2(spawn_x, spawn_y)
+	print(spawn_y)
+	projectile.direction = Vector2.LEFT
+	projectile.damage = 10
+	
+	add_child(projectile)
+	
+func randomize_timer():
+	projectile_timer.wait_time = randf_range(0.5, 2.0) 
+	projectile_timer.start()
+
+
+func _on_projectile_timer_timeout() -> void:
+	spawn_projectile()
+	randomize_timer()
+	pass # Replace with function body.

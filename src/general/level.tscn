@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://c1xp2narxicdy"]
+[gd_scene load_steps=8 format=3 uid="uid://c1xp2narxicdy"]
 
 [ext_resource type="Script" uid="uid://bbslkoi1ndanu" path="res://src/general/level.gd" id="1_t41yl"]
 [ext_resource type="Shader" uid="uid://bmpheaqyydsok" path="res://src/shaders/smooth_pixel.gdshader" id="2_eegbk"]
 [ext_resource type="PackedScene" uid="uid://dqsjvx71aqd0g" path="res://src/general/level_chunk.tscn" id="3_eegbk"]
+[ext_resource type="PackedScene" uid="uid://d3s5y8dlupiq6" path="res://src/objects/projectile.tscn" id="4_t41yl"]
 [ext_resource type="Texture2D" uid="uid://d3lofbmwfgaxd" path="res://assets/environment/bg.png" id="5_0rxcc"]
 [ext_resource type="PackedScene" uid="uid://l85yqf8v2y5" path="res://src/player/player.tscn" id="5_hfv6q"]
 
@@ -13,6 +14,7 @@ shader = ExtResource("2_eegbk")
 script = ExtResource("1_t41yl")
 player_scene = ExtResource("5_hfv6q")
 chunk_scene = ExtResource("3_eegbk")
+projectile_scene = ExtResource("4_t41yl")
 chunk_length = 1024
 
 [node name="parallax" type="ParallaxBackground" parent="."]
@@ -25,3 +27,7 @@ motion_mirroring = Vector2(320, 0)
 [node name="background" type="Sprite2D" parent="parallax/background"]
 position = Vector2(160, 90)
 texture = ExtResource("5_0rxcc")
+
+[node name="projectile_timer" type="Timer" parent="."]
+
+[connection signal="timeout" from="projectile_timer" to="." method="_on_projectile_timer_timeout"]

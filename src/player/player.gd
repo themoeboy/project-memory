@@ -185,9 +185,7 @@ func handle_hurting(delta):
 	handle_input(delta)
 	hurt_timer -= delta
 	if hurt_timer <= 0:
-		current_state = ENUMS.player_state.IDLE
-
-
+		current_state = ENUMS.player_state.WALKING
 
 
 func handle_throwing_state(delta):

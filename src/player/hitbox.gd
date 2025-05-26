@@ -5,4 +5,4 @@ func _physics_process(delta):
 		var parent = get_parent()
 		var enemy = area.get_parent()
 		if parent.has_method("take_damage"):
-			parent.take_damage(enemy.DAMAGE)
+			parent.take_damage(enemy.damage)
