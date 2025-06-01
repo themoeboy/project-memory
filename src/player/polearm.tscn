@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://q17vr8jhgeay"]
 
-[ext_resource type="Script" uid="uid://cr4of6tyy1c30" path="res://src/player/polearm.gd" id="1_fgjkf"]
+[ext_resource type="Script" uid="uid://cr4of6tyy1c30" path="res://src/objects/projectile.gd" id="1_fgjkf"]
 [ext_resource type="Shader" uid="uid://bmpheaqyydsok" path="res://src/shaders/smooth_pixel.gdshader" id="2_sdp0l"]
 [ext_resource type="Texture2D" uid="uid://j3ggpne6sqkw" path="res://assets/draft/polearm.png" id="2_wh4gw"]
 

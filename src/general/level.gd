@@ -66,11 +66,11 @@ func spawn_projectile():
 	var spawn_x = UTIL.player_ref.global_position.x + projectile_spawn_distance
 	var spawn_y = UTIL.player_ref.global_position.y + randf_range(-projectile_vertical_variance_max, 0) 
 	projectile.global_position = Vector2(spawn_x, spawn_y)
-	print(spawn_y)
+	projectile.spawn_position = Vector2(spawn_x, spawn_y)
 	projectile.direction = Vector2.LEFT
 	projectile.damage = 10
-	
 	add_child(projectile)
+
 	
 func randomize_timer():
 	projectile_timer.wait_time = randf_range(0.5, 2.0) 

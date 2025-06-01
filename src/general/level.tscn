@@ -30,4 +30,12 @@ texture = ExtResource("5_0rxcc")
 
 [node name="projectile_timer" type="Timer" parent="."]
 
+[node name="canvas" type="CanvasLayer" parent="."]
+
+[node name="control" type="Control" parent="canvas"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 318.0
+offset_bottom = 180.0
+
 [connection signal="timeout" from="projectile_timer" to="." method="_on_projectile_timer_timeout"]
