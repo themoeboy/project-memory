@@ -3,12 +3,15 @@ extends Node2D
 @export var player_scene: PackedScene
 @export var chunk_scene: PackedScene
 @export var projectile_scene: PackedScene
+@export var warning_scene: PackedScene
 @export var chunk_length: int = 512
 @export var preload_chunks: int = 5
 @export var finish_distance: int = 10000
-@onready var projectile_timer = $projectile_timer
 @export var projectile_spawn_distance: float = 300  # How far to the right of player to spawn
 @export var projectile_vertical_variance_max: float = 48
+
+@onready var projectile_timer = $projectile_timer
+@onready var onscreen_layer = $onscreen_layer
 
 var player_ref
 var last_chunk_x = 0
@@ -22,6 +25,7 @@ func _ready():
 	randomize_timer()
 	
 func _process(_delta):
+	UTIL.onscreen_layer_ref = onscreen_layer
 	if player_ref:
 		var player_x = player_ref.global_position.x
 		if player_x + (preload_chunks * chunk_length) > last_chunk_x and last_chunk_x < finish_distance:
@@ -62,18 +66,23 @@ func spawn_projectile():
 		return
 
 	var projectile = projectile_scene.instantiate()
+	var warning = warning_scene.instantiate()
 	
 	var spawn_x = UTIL.player_ref.global_position.x + projectile_spawn_distance
 	var spawn_y = UTIL.player_ref.global_position.y + randf_range(-projectile_vertical_variance_max, 0) 
+	
 	projectile.global_position = Vector2(spawn_x, spawn_y)
-	projectile.spawn_position = Vector2(spawn_x, spawn_y)
 	projectile.direction = Vector2.LEFT
 	projectile.damage = 10
-	add_child(projectile)
+	
+	add_child(projectile) 
+	
+	warning.spawn_position = Vector2(spawn_x, spawn_y)
+	UTIL.onscreen_layer_ref.add_child(warning)
 
 	
 func randomize_timer():
-	projectile_timer.wait_time = randf_range(0.5, 2.0) 
+	projectile_timer.wait_time = randf_range(5, 7.5) 
 	projectile_timer.start()
 
 

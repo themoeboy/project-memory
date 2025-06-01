@@ -1,9 +1,10 @@
 extends Node
-
+# Globals
 var player_pos
 var player_ref
 var polearm_pos
 var polearm_paused_pos
+var onscreen_layer_ref
 var can_dash : bool = false 
 
 const all_items = [

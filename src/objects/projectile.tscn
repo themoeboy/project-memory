@@ -1,9 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://d3s5y8dlupiq6"]
+[gd_scene load_steps=7 format=3 uid="uid://d3s5y8dlupiq6"]
 
 [ext_resource type="Script" uid="uid://cr4of6tyy1c30" path="res://src/objects/projectile.gd" id="1_bn7b6"]
 [ext_resource type="Shader" uid="uid://bmpheaqyydsok" path="res://src/shaders/smooth_pixel.gdshader" id="2_0ssxv"]
 [ext_resource type="Texture2D" uid="uid://62ouvx6hbpye" path="res://assets/items/cardboard.png" id="3_bn7b6"]
-[ext_resource type="Texture2D" uid="uid://mh3f0m4k2uu" path="res://assets/ui/warning.png" id="4_0ssxv"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cjcwe"]
 shader = ExtResource("2_0ssxv")
@@ -40,12 +39,7 @@ position = Vector2(0, -2.38419e-07)
 shape = SubResource("RectangleShape2D_6lu4g")
 debug_color = Color(0.613875, 0.381492, 0.95523, 0.42)
 
-[node name="warning" type="Sprite2D" parent="."]
-texture = ExtResource("4_0ssxv")
-
 [node name="vision" type="VisibleOnScreenEnabler2D" parent="."]
-
-[node name="warning_timer" type="Timer" parent="."]
 
 [node name="spawn_timer" type="Timer" parent="."]
 
@@ -53,4 +47,3 @@ texture = ExtResource("4_0ssxv")
 [connection signal="area_entered" from="dodgebox" to="." method="_on_retrievebox_area_entered"]
 [connection signal="body_entered" from="dodgebox" to="." method="_on_retrievebox_body_entered"]
 [connection signal="screen_exited" from="vision" to="." method="_on_vision_screen_exited"]
-[connection signal="timeout" from="warning_timer" to="." method="_on_warning_timer_timeout"]
