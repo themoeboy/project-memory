@@ -48,6 +48,7 @@ var polearm_instance
 func _ready():
 	health_component.health_changed.connect(_on_health_changed)  
 	health_component.now_dead.connect(_on_death)
+	go_to_state(ENUMS.player_state.WALKING)
 	
 func _physics_process(delta):
 	view_items()
@@ -105,7 +106,7 @@ func go_to_state(state):
 	match state:
 		ENUMS.player_state.RUNNING:
 			current_state = ENUMS.player_state.RUNNING
-			animation.play("run")
+			animation.play("walk")
 		ENUMS.player_state.WALKING:
 			current_state = ENUMS.player_state.WALKING
 			animation.play("walk")

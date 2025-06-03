@@ -17,7 +17,6 @@ func _physics_process(delta):
 func update_warning_icon():
 	var screen_size := get_viewport_rect().size
 	position = Vector2(screen_size.x - 16, spawn_position.y)
-	print(global_position)
 
 func _on_warning_timer_timeout() -> void:
 	queue_free()
