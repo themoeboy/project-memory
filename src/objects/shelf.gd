@@ -36,7 +36,7 @@ func generate_items():
 
 		item_instance.position = Vector2(pos_x, pos_y)
 		
-		var random_index = randi() % UTIL.all_items.size()
-		item_instance.item_name = UTIL.all_items[random_index]
+		var random_index = randi() % UTIL.all_items_array.size()
+		item_instance.item_name = UTIL.all_items_array[random_index]
 
 		add_child(item_instance)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c1xp2narxicdy"]
+[gd_scene load_steps=10 format=3 uid="uid://c1xp2narxicdy"]
 
 [ext_resource type="Script" uid="uid://bbslkoi1ndanu" path="res://src/general/level.gd" id="1_t41yl"]
 [ext_resource type="Shader" uid="uid://bmpheaqyydsok" path="res://src/shaders/smooth_pixel.gdshader" id="2_eegbk"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://d3lofbmwfgaxd" path="res://assets/environment/bg.png" id="5_0rxcc"]
 [ext_resource type="PackedScene" uid="uid://dvsn0t6uukso2" path="res://src/ui/warning.tscn" id="5_eegbk"]
 [ext_resource type="PackedScene" uid="uid://l85yqf8v2y5" path="res://src/player/player.tscn" id="5_hfv6q"]
+[ext_resource type="Script" uid="uid://bk82sch1ke44m" path="res://src/general/ui_layer.gd" id="8_msyly"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fyndt"]
 shader = ExtResource("2_eegbk")
@@ -18,6 +19,14 @@ chunk_scene = ExtResource("3_eegbk")
 projectile_scene = ExtResource("4_t41yl")
 warning_scene = ExtResource("5_eegbk")
 chunk_length = 1024
+
+[node name="ui_layer" type="CanvasLayer" parent="."]
+script = ExtResource("8_msyly")
+
+[node name="money" type="Label" parent="ui_layer"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "10"
 
 [node name="parallax" type="ParallaxBackground" parent="."]
 

@@ -10,8 +10,11 @@ extends Node2D
 @export var projectile_spawn_distance: float = 300  # How far to the right of player to spawn
 @export var projectile_vertical_variance_max: float = 48
 
+
+# Children nodes
 @onready var projectile_timer = $projectile_timer
 @onready var onscreen_layer = $onscreen_layer
+@onready var ui_layer = $ui_layer
 
 var player_ref
 var last_chunk_x = 0
@@ -26,6 +29,7 @@ func _ready():
 	
 func _process(_delta):
 	UTIL.onscreen_layer_ref = onscreen_layer
+	update_ui()
 	if player_ref:
 		var player_x = player_ref.global_position.x
 		if player_x + (preload_chunks * chunk_length) > last_chunk_x and last_chunk_x < finish_distance:
@@ -90,3 +94,6 @@ func _on_projectile_timer_timeout() -> void:
 	spawn_projectile()
 	randomize_timer()
 	pass # Replace with function body.
+
+func update_ui():
+	ui_layer.update_money_label()

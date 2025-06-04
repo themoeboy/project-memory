@@ -7,10 +7,23 @@ var polearm_paused_pos
 var onscreen_layer_ref
 var can_dash : bool = false 
 
-const all_items = [
-	'blueberry',
-	'orange'
-]
+
+# Progress
+var money = 0 
+
+
+
+const all_items = {
+	"orange": {
+		"name": "orange",
+		"value": 10
+	},
+	"blueberry": {
+		"name": "blueberry",
+		"value": 20
+	}
+}
+var all_items_array = all_items.keys()
 
 func freeze_frame(timescale: float, duration: float ) -> void:
 	Engine.time_scale = timescale

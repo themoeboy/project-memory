@@ -118,10 +118,10 @@ func go_to_state(state):
 		ENUMS.player_state.DOUBLE_JUMPING:
 			double_jump()
 			current_state = ENUMS.player_state.DOUBLE_JUMPING
+		ENUMS.player_state.HURTING:
+			current_state = ENUMS.player_state.HURTING
 		
-	
-	
-
+		
 func handle_idle_state(delta):
 	handle_input(delta)
 	if Input.is_action_just_pressed('throw'):
@@ -295,11 +295,11 @@ func _on_death():
 
 func take_damage(amount: int):
 	if current_state != ENUMS.player_state.HURTING:
+		go_to_state(ENUMS.player_state.HURTING)
 		hurt_timer = HURT_TIME
 		push_character(50)
 		UTIL.flash_blinking(sprite, 0.3, 0.1)
-		UTIL.freeze_frame(0.2, HURT_TIME)
-		current_state = ENUMS.player_state.HURTING
+		UTIL.freeze_frame(0.2, HURT_TIME)		
 		health_component.take_damage(amount)
 	
 
