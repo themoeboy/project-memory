@@ -6,13 +6,9 @@ var polearm_pos
 var polearm_paused_pos
 var onscreen_layer_ref
 var can_dash : bool = false 
+var is_parrying : bool = false
 
-
-# Progress
-var money = 0 
-
-
-
+# Constants
 const all_items = {
 	"orange": {
 		"name": "orange",
@@ -23,7 +19,16 @@ const all_items = {
 		"value": 20
 	}
 }
+
 var all_items_array = all_items.keys()
+
+
+# Progress
+var money = 0 
+
+
+
+# Functions 
 
 func freeze_frame(timescale: float, duration: float ) -> void:
 	Engine.time_scale = timescale

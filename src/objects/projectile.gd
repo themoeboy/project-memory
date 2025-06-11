@@ -14,3 +14,6 @@ func _physics_process(delta):
 
 func _on_vision_screen_exited() -> void:
 	queue_free()
+	
+func parry():
+	queue_free()

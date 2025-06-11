@@ -13,6 +13,7 @@ func _ready():
 			sprite.texture = texture
 		else:
 			print("❌ Could not load item sprite:", path)
+			
 func gather():
 	if(Input.is_action_pressed("gather")):
 		UTIL.money = UTIL.money + item_value

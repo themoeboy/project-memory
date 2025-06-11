@@ -13,6 +13,7 @@ extends CharacterBody2D
 @export var DEACCELERATION = 1000.0
 @export var COYOTE_TIME = 0.2
 @export var JUMP_BUFFER_TIME = 0.1
+@export var PARRY_TIME = 0.5
 @export var DASH_TIME = 0.2
 @export var HURT_TIME = 0.5
 @export var THROW_TIME = 0.5
@@ -21,6 +22,8 @@ extends CharacterBody2D
 
 # Variables
 var current_state = ENUMS.player_state.WALKING
+var previous_state
+var current_gravity = GRAVITY
 var coyote_timer = 0.0
 var jump_buffer_timer = 0.0
 var dash_timer = 0.0
@@ -43,12 +46,14 @@ var polearm_instance
 @onready var animation = $animation
 @onready var sprite = $sprite
 @onready var gather_area = $gather_area
-
+@onready var parry_timer = $parry_timer
+@onready var parry_area = $parry_area
 
 func _ready():
 	health_component.health_changed.connect(_on_health_changed)  
 	health_component.now_dead.connect(_on_death)
 	go_to_state(ENUMS.player_state.WALKING)
+	current_gravity = GRAVITY
 	
 func _physics_process(delta):
 	view_items()
@@ -57,34 +62,28 @@ func _physics_process(delta):
 		coyote_timer = COYOTE_TIME
 		can_double_jump = true
 	else:
-		velocity.y += GRAVITY * delta
+		velocity.y += current_gravity * delta
 		coyote_timer -= delta
-
+		
 	if jump_buffer_timer > 0:
 		jump_buffer_timer -= delta
 	
 	# State handling
 	match current_state:
-		ENUMS.player_state.IDLE:
-			handle_idle_state(delta)
 		ENUMS.player_state.WALKING:
 			handle_walking_state(delta)
 		ENUMS.player_state.RUNNING:
 			handle_running_state(delta)
 		ENUMS.player_state.JUMPING:
 			handle_jumping_state(delta)
-		ENUMS.player_state.FALLING:
-			handle_falling_state(delta)
-		ENUMS.player_state.DASHING:
-			handle_dashing_state(delta)
+		ENUMS.player_state.PARRYING:
+			handle_parrying_state(delta)
 		ENUMS.player_state.DOUBLE_JUMPING:
 			handle_double_jumping_state(delta)
-		ENUMS.player_state.WALL_SLIDING:
-			handle_wall_sliding_state(delta)
+		ENUMS.player_state.FALLING:
+			handle_falling_state(delta)
 		ENUMS.player_state.HURTING:
 			handle_hurting(delta)
-		ENUMS.player_state.THROWING:
-			handle_throwing_state(delta)
 
 	# Apply velocity
 	move_and_slide()
@@ -120,35 +119,25 @@ func go_to_state(state):
 			current_state = ENUMS.player_state.DOUBLE_JUMPING
 		ENUMS.player_state.HURTING:
 			current_state = ENUMS.player_state.HURTING
+		ENUMS.player_state.PARRYING:
+			animation.play("parry")
+			UTIL.is_parrying = true
+			parry_timer.wait_time = PARRY_TIME
+			parry_timer.start()
+			current_state = ENUMS.player_state.PARRYING
+		ENUMS.player_state.FALLING:
+			animation.play("parry")
+			current_state = ENUMS.player_state.FALLING
 		
-		
-func handle_idle_state(delta):
-	handle_input(delta)
-	if Input.is_action_just_pressed('throw'):
-		current_state = ENUMS.player_state.THROWING
-		shoot_projectile()
-		return
-	if Input.is_action_just_pressed("jump"):
-		jump_buffer_timer = JUMP_BUFFER_TIME
-	if (coyote_timer > 0 or is_on_floor()) and jump_buffer_timer > 0:
-		jump() 
-		jump_buffer_timer = 0
-		return
-	if Input.is_action_just_pressed("dash"):
-		dash()
-		return
-	if is_on_floor():
-			if abs(velocity.x) > 0:
-				current_state = ENUMS.player_state.RUNNING
-			else:
-				go_to_state(ENUMS.player_state.IDLE)
-		
-
+	
 func handle_walking_state(delta):
+	current_gravity = GRAVITY
 	if Input.is_action_just_pressed('run'):
 		go_to_state(ENUMS.player_state.RUNNING)
 	if Input.is_action_just_pressed('jump'):
 		go_to_state(ENUMS.player_state.JUMPING)
+	if Input.is_action_just_pressed('parry'):
+		go_to_state(ENUMS.player_state.PARRYING)
 	if (velocity.x <= MAX_WALKING_SPEED):
 		velocity.x = move_toward(velocity.x, MAX_WALKING_SPEED, WALKING_ACCELERATION * delta)
 	else:
@@ -156,124 +145,62 @@ func handle_walking_state(delta):
 	return
 
 func handle_running_state(delta):
+	current_gravity = GRAVITY
 	velocity.x = move_toward(velocity.x, MAX_SPEED, RUNNING_ACCELERATION * delta)
 	if Input.is_action_just_released('run'):
 		go_to_state(ENUMS.player_state.WALKING)
 	if Input.is_action_just_pressed('jump'):
 		go_to_state(ENUMS.player_state.JUMPING)
+	if Input.is_action_just_pressed('parry'):
+		go_to_state(ENUMS.player_state.PARRYING)
 	return
-
 
 func handle_jumping_state(delta):
 	if Input.is_action_just_pressed("jump") and can_double_jump:
+		
+		double_jump()
 		go_to_state(ENUMS.player_state.DOUBLE_JUMPING)
 		return
+	if Input.is_action_just_pressed('parry'):
+		go_to_state(ENUMS.player_state.PARRYING)
 	if is_on_floor():
 		go_to_state(ENUMS.player_state.WALKING)
 		return
+	elif not is_on_floor() and velocity.y > 0 and current_state != ENUMS.player_state.FALLING:
+		go_to_state(ENUMS.player_state.FALLING)
+		return
 
-func jump():
-	velocity.y = JUMP_FORCE
+func handle_falling_state(delta):
+	current_gravity = GRAVITY/3
+	if Input.is_action_just_pressed("jump") and can_double_jump:
+		double_jump()
+		go_to_state(ENUMS.player_state.DOUBLE_JUMPING)
+	if is_on_floor():
+		if abs(velocity.x) > 0:
+			go_to_state(ENUMS.player_state.WALKING)
 
 func handle_double_jumping_state(delta):
 	handle_jumping_state(delta)
 
+func handle_parrying_state(delta):
+	if UTIL.is_parrying:
+		parry_area.monitoring = true
+		parry_items()
+	return
+
+func handle_hurting(delta):
+	hurt_timer -= delta
+	if hurt_timer <= 0: 
+		go_to_state(ENUMS.player_state.WALKING)
+
+func jump():
+	velocity.y = JUMP_FORCE
+
 func double_jump():
+	current_gravity = GRAVITY
 	velocity.y = JUMP_FORCE
 	can_double_jump = false
 
-func handle_hurting(delta):
-	handle_input(delta)
-	hurt_timer -= delta
-	if hurt_timer <= 0:
-		current_state = ENUMS.player_state.WALKING
-
-
-func handle_throwing_state(delta):
-	velocity.x = 0
-	throw_timer -= delta
-	if throw_timer <= 0:
-		current_state = ENUMS.player_state.IDLE
-
-
-func handle_falling_state(delta):
-	handle_input(delta)
-	if Input.is_action_just_pressed("dash"):
-		dash()
-	if Input.is_action_just_pressed("jump") and can_double_jump:
-		double_jump()
-	if is_on_floor():
-		if abs(velocity.x) > 0:
-			current_state = ENUMS.player_state.RUNNING
-		else:
-			current_state = ENUMS.player_state.IDLE
-
-func handle_dashing_state(delta):
-	dash_timer -= delta
-	hurtbox_area.monitoring = false  # Be immune to damage on dash
-	set_collision_layer_value(1, false)
-	set_collision_mask_value(2, false)
-	
-	var polearm_pos = UTIL.polearm_paused_pos if UTIL.polearm_paused_pos != null else UTIL.polearm_pos  
-	
-	if dash_timer <= 0 or global_position.distance_to(polearm_pos) < 1:
-		hurtbox_area.monitoring = true  # Be immune to damage on dash
-		dash_attack_area.monitoring = false  # Disable attack after dash ends
-		current_state = ENUMS.player_state.IDLE
-		set_collision_layer_value(1, true) 
-		set_collision_mask_value(2 , true)   
-		velocity = Vector2.ZERO
-		global_position = polearm_pos
-
-
-
-func handle_wall_sliding_state(delta):
-	velocity.y = min(velocity.y, WALL_SLIDE_SPEED)
-	if Input.is_action_just_pressed("jump"):
-		double_jump()
-
-func handle_input(delta):
-	input_direction = 0
-	if Input.is_action_pressed("move_left"):
-		input_direction -= 1
-	if Input.is_action_pressed("move_right"):
-		input_direction += 1
-
-	# If input direction is opposite to movement, stop immediately
-	if input_direction != 0 and sign(velocity.x) != input_direction and velocity.x != 0:
-		velocity.x = 0
-	# Otherwise apply normal acceleration/deceleration
-	elif input_direction != 0:
-		velocity.x = move_toward(velocity.x, input_direction * MAX_SPEED, RUNNING_ACCELERATION * delta)
-	else:
-		velocity.x = move_toward(velocity.x, 0, DEACCELERATION * delta)
-
-	# Apply gravity
-
-
-
-
-func dash():
-	if(UTIL.can_dash):
-		var to_polearm_vec = Vector2(0,0)
-		
-		if UTIL.polearm_paused_pos:
-			to_polearm_vec = UTIL.polearm_paused_pos - global_position
-		else:
-			to_polearm_vec = UTIL.polearm_pos - global_position
-		var distance = to_polearm_vec.length()
-		var direction = to_polearm_vec.normalized()
-
-		current_state = ENUMS.player_state.DASHING
-		dash_attack_area.monitoring = true
-		
-		if polearm_instance:
-			polearm_instance.queue_free()
-			
-		velocity = direction * DASH_SPEED
-		dash_timer = distance / DASH_SPEED  # Duration needed
-		UTIL.can_dash = false
-	
 func handle_direction():
 	if input_direction != 0 and input_direction != last_direction:
 		if (input_direction == -1):
@@ -283,7 +210,7 @@ func handle_direction():
 			scale.y = 1 
 			rotation = 0
 		last_direction = input_direction
-		
+
 func push_character(x: int):
 	velocity.x = last_direction * x
 
@@ -302,25 +229,21 @@ func take_damage(amount: int):
 		UTIL.freeze_frame(0.2, HURT_TIME)		
 		health_component.take_damage(amount)
 	
-
-func shoot_projectile():
-	throw_timer = THROW_TIME
-	polearm_instance = polearm.instantiate()
-	polearm_instance.damage = POLEARM_THROW_DAMAGE
-	get_tree().current_scene.add_child(polearm_instance)  
-
-	polearm_instance.global_position = global_position  
-	
-	var mouse_pos = get_global_mouse_position()
-	polearm_instance.direction = (mouse_pos - global_position).normalized()
-
-
-func _on_gather_area_area_entered(area: Area2D) -> void:
-	if area.has_method("gather"):
-		area.gather()
-
 func view_items():
 	for gatherable in gather_area.get_overlapping_areas():
 			if gatherable.has_method('gather') and  Input.is_action_just_pressed("gather"):
 					gatherable.gather()
+func parry_items():
+	for parryable in parry_area.get_overlapping_areas():
+			if parryable.has_method('parry') and  Input.is_action_just_pressed("parry"):
+				parryable.parry()
 						
+func _on_parry_timer_timeout() -> void:
+	UTIL.is_parrying = false
+	parry_area.monitoring = false
+	if is_on_floor():
+		if abs(velocity.x) > MAX_WALKING_SPEED:
+			go_to_state(ENUMS.player_state.RUNNING)
+		else:
+			go_to_state(ENUMS.player_state.WALKING)
+	pass # Replace with function body.

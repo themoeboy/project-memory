@@ -1,11 +1,11 @@
-[gd_scene load_steps=18 format=3 uid="uid://l85yqf8v2y5"]
+[gd_scene load_steps=21 format=3 uid="uid://l85yqf8v2y5"]
 
 [ext_resource type="Script" uid="uid://beguc8jpyxdxe" path="res://src/player/player.gd" id="1_s5dbj"]
 [ext_resource type="Shader" uid="uid://bmpheaqyydsok" path="res://src/shaders/smooth_pixel.gdshader" id="2_o822w"]
 [ext_resource type="Script" uid="uid://cd8dp7mscgy0y" path="res://src/helpers/attack.gd" id="3_mf2ua"]
 [ext_resource type="Texture2D" uid="uid://1sgawi2r6857" path="res://assets/player/dog-Sheet.png" id="3_x42xx"]
 [ext_resource type="PackedScene" uid="uid://dne4rabaer156" path="res://src/helpers/health.tscn" id="4_244u8"]
-[ext_resource type="Script" uid="uid://b8l7epw8fyidg" path="res://src/player/hitbox.gd" id="5_5f2sf"]
+[ext_resource type="Script" uid="uid://b8l7epw8fyidg" path="res://src/player/hurtbox.gd" id="5_5f2sf"]
 [ext_resource type="Script" uid="uid://buk6lsoqwwf6r" path="res://src/player/test.gd" id="6_jiejy"]
 
 [sub_resource type="Animation" id="Animation_x42xx"]
@@ -40,6 +40,22 @@ tracks/0/keys = {
 "values": [0, 1, 2, 3]
 }
 
+[sub_resource type="Animation" id="Animation_8ydov"]
+resource_name = "parry"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [12]
+}
+
 [sub_resource type="Animation" id="Animation_l271a"]
 resource_name = "walk"
 length = 1.5
@@ -61,6 +77,7 @@ tracks/0/keys = {
 _data = {
 &"RESET": SubResource("Animation_x42xx"),
 &"idle": SubResource("Animation_o822w"),
+&"parry": SubResource("Animation_8ydov"),
 &"walk": SubResource("Animation_l271a")
 }
 
@@ -77,9 +94,15 @@ size = Vector2(24, 20)
 size = Vector2(16.3125, 20.25)
 
 [sub_resource type="LabelSettings" id="LabelSettings_jiejy"]
-font_size = 8
+font_size = 6
 font_color = Color(0, 0, 0, 1)
-outline_size = 2
+outline_size = 1
+
+[sub_resource type="LabelSettings" id="LabelSettings_o822w"]
+font_size = 8
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_x42xx"]
+radius = 11.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_o822w"]
 radius = 21.0
@@ -108,7 +131,7 @@ material = SubResource("ShaderMaterial_x42xx")
 position = Vector2(-17, -23)
 texture = ExtResource("3_x42xx")
 centered = false
-hframes = 12
+hframes = 13
 
 [node name="camera" type="Camera2D" parent="."]
 offset = Vector2(60, -30)
@@ -140,13 +163,36 @@ position = Vector2(1, -1)
 shape = SubResource("RectangleShape2D_5f2sf")
 debug_color = Color(0.604464, 0.366649, 0.99886, 0.42)
 
-[node name="player_state_label" type="Label" parent="."]
-offset_left = -20.0
-offset_top = -46.0
-offset_right = 20.0
-offset_bottom = -23.0
-label_settings = SubResource("LabelSettings_jiejy")
+[node name="test_labels" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 script = ExtResource("6_jiejy")
+
+[node name="player_state_label" type="Label" parent="test_labels"]
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 24.0
+offset_bottom = 7.0
+label_settings = SubResource("LabelSettings_jiejy")
+
+[node name="velocity_label" type="Label" parent="test_labels"]
+visible = false
+offset_left = -46.0
+offset_top = -35.0
+offset_right = -26.0
+offset_bottom = -12.0
+label_settings = SubResource("LabelSettings_o822w")
+
+[node name="parry_area" type="Area2D" parent="."]
+collision_layer = 32
+collision_mask = 16
+monitoring = false
+
+[node name="parry_area" type="CollisionShape2D" parent="parry_area"]
+shape = SubResource("CircleShape2D_x42xx")
+debug_color = Color(0.703843, 0.476262, 0.322455, 0.42)
 
 [node name="gather_area" type="Area2D" parent="."]
 collision_layer = 512
@@ -156,6 +202,10 @@ collision_mask = 1024
 position = Vector2(1, 0)
 shape = SubResource("CircleShape2D_o822w")
 
+[node name="parry_timer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="area_entered" from="dash_attack" to="dash_attack" method="_on_area_entered"]
 [connection signal="area_entered" from="hurtbox" to="hurtbox" method="_on_area_entered"]
 [connection signal="area_entered" from="gather_area" to="." method="_on_gather_area_area_entered"]
+[connection signal="timeout" from="parry_timer" to="." method="_on_parry_timer_timeout"]
