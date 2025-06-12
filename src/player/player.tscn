@@ -102,7 +102,7 @@ outline_size = 1
 font_size = 8
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_x42xx"]
-radius = 11.0
+radius = 22.0227
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_o822w"]
 radius = 21.0
@@ -171,6 +171,7 @@ offset_bottom = 40.0
 script = ExtResource("6_jiejy")
 
 [node name="player_state_label" type="Label" parent="test_labels"]
+layout_mode = 0
 offset_left = -16.0
 offset_top = -16.0
 offset_right = 24.0
@@ -179,6 +180,7 @@ label_settings = SubResource("LabelSettings_jiejy")
 
 [node name="velocity_label" type="Label" parent="test_labels"]
 visible = false
+layout_mode = 0
 offset_left = -46.0
 offset_top = -35.0
 offset_right = -26.0
@@ -199,7 +201,6 @@ collision_layer = 512
 collision_mask = 1024
 
 [node name="gather_area" type="CollisionShape2D" parent="gather_area"]
-position = Vector2(1, 0)
 shape = SubResource("CircleShape2D_o822w")
 
 [node name="parry_timer" type="Timer" parent="."]

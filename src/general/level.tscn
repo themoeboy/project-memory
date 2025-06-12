@@ -40,7 +40,6 @@ position = Vector2(160, 90)
 texture = ExtResource("5_0rxcc")
 
 [node name="projectile_timer" type="Timer" parent="."]
-wait_time = 6.0
 
 [node name="onscreen_layer" type="CanvasLayer" parent="."]
 offset = Vector2(0, -30)

@@ -35,7 +35,6 @@ var input_direction = 0
 var last_direction = 1
 var polearm_instance
 
-
 @onready var ray_cast_2d_left = $RayCast2D_left
 @onready var ray_cast_2d_right = $RayCast2D_right
 @onready var health_component = $health  
@@ -157,7 +156,6 @@ func handle_running_state(delta):
 
 func handle_jumping_state(delta):
 	if Input.is_action_just_pressed("jump") and can_double_jump:
-		
 		double_jump()
 		go_to_state(ENUMS.player_state.DOUBLE_JUMPING)
 		return
@@ -235,8 +233,10 @@ func view_items():
 					gatherable.gather()
 func parry_items():
 	for parryable in parry_area.get_overlapping_areas():
-			if parryable.has_method('parry') and  Input.is_action_just_pressed("parry"):
-				parryable.parry()
+			print(parryable)
+			var projectile = parryable.get_parent()
+			if projectile.has_method('parry'):
+				projectile.parry()
 						
 func _on_parry_timer_timeout() -> void:
 	UTIL.is_parrying = false

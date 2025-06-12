@@ -9,7 +9,8 @@ extends Node2D
 @export var finish_distance: int = 10000
 @export var projectile_spawn_distance: float = 300  # How far to the right of player to spawn
 @export var projectile_vertical_variance_max: float = 48
-
+@export var projectile_spawn_timer_variance: int = 3
+@export var projectile_spawn_timer_min: int = 2
 
 # Children nodes
 @onready var projectile_timer = $projectile_timer
@@ -86,7 +87,7 @@ func spawn_projectile():
 
 	
 func randomize_timer():
-	projectile_timer.wait_time = randf_range(5, 7.5) 
+	projectile_timer.wait_time = randf_range(projectile_spawn_timer_min, projectile_spawn_timer_min + projectile_spawn_timer_variance) 
 	projectile_timer.start()
 
 
