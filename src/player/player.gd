@@ -31,6 +31,7 @@ var pre_dash_velocity = 0
 var hurt_timer = 0.0
 var throw_timer = 0.0
 var can_double_jump = true
+var can_jump_from_parry = false
 var input_direction = 0
 var last_direction = 1
 var polearm_instance
@@ -173,6 +174,8 @@ func handle_falling_state(delta):
 	if Input.is_action_just_pressed("jump") and can_double_jump:
 		double_jump()
 		go_to_state(ENUMS.player_state.DOUBLE_JUMPING)
+	if Input.is_action_just_pressed('parry'):
+		go_to_state(ENUMS.player_state.PARRYING)
 	if is_on_floor():
 		if abs(velocity.x) > 0:
 			go_to_state(ENUMS.player_state.WALKING)
@@ -182,9 +185,15 @@ func handle_double_jumping_state(delta):
 
 func handle_parrying_state(delta):
 	if UTIL.is_parrying:
+		current_gravity = GRAVITY
+		velocity.x = last_direction * MAX_WALKING_SPEED
+		velocity.y = 0
+		hurtbox_area.monitoring = false
 		parry_area.monitoring = true
 		parry_items()
-	return
+		if Input.is_action_just_pressed("jump") and can_jump_from_parry:
+			go_to_state(ENUMS.player_state.JUMPING)
+			can_jump_from_parry = false
 
 func handle_hurting(delta):
 	hurt_timer -= delta
@@ -233,17 +242,20 @@ func view_items():
 					gatherable.gather()
 func parry_items():
 	for parryable in parry_area.get_overlapping_areas():
-			print(parryable)
 			var projectile = parryable.get_parent()
 			if projectile.has_method('parry'):
 				projectile.parry()
+				can_jump_from_parry = true
 						
 func _on_parry_timer_timeout() -> void:
 	UTIL.is_parrying = false
 	parry_area.monitoring = false
+	hurtbox_area.monitoring = true
 	if is_on_floor():
 		if abs(velocity.x) > MAX_WALKING_SPEED:
 			go_to_state(ENUMS.player_state.RUNNING)
 		else:
 			go_to_state(ENUMS.player_state.WALKING)
-	pass # Replace with function body.
+	else: 
+		go_to_state(ENUMS.player_state.FALLING)
+	pass 
