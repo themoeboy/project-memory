@@ -4,16 +4,18 @@ extends Area2D
 var item_name: String = "orange"
 var item_value: int
 
+const sprite_sheet = preload("res://assets/items/item_spritesheet.png")
+const sprite_size = Vector2(16, 16) 
+
 func _ready():
 	if item_name != "":
-		var path = "res://assets/items/%s.png" % item_name
-		var texture = load(path)
-		item_value = UTIL.all_items[item_name].value
-		if texture:
-			sprite.texture = texture
-		else:
-			print("❌ Could not load item sprite:", path)
-			
+		var item_data = UTIL.all_items[item_name]
+		item_value = item_data.value
+		sprite.texture = sprite_sheet
+		sprite.region_enabled = true
+		var region = item_data.region
+		sprite.region_rect = Rect2(region.x * sprite_size.x, region.y * sprite_size.y, sprite_size.x, sprite_size.y)
+		
 func gather():
 	if(Input.is_action_pressed("gather")):
 		UTIL.money = UTIL.money + item_value

@@ -70,7 +70,7 @@ func _physics_process(delta):
 	
 	# State handling
 	match current_state:
-		ENUMS.player_state.WALKING:
+		ENUMS.player_state.WALKING: 
 			handle_walking_state(delta)
 		ENUMS.player_state.RUNNING:
 			handle_running_state(delta)

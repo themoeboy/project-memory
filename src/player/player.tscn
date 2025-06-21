@@ -164,6 +164,7 @@ shape = SubResource("RectangleShape2D_5f2sf")
 debug_color = Color(0.604464, 0.366649, 0.99886, 0.42)
 
 [node name="test_labels" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -171,6 +172,7 @@ offset_bottom = 40.0
 script = ExtResource("6_jiejy")
 
 [node name="player_state_label" type="Label" parent="test_labels"]
+visible = false
 layout_mode = 0
 offset_left = -16.0
 offset_top = -16.0

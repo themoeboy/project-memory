@@ -12,11 +12,28 @@ var is_parrying : bool = false
 const all_items = {
 	"orange": {
 		"name": "orange",
-		"value": 10
+		"value": 10,
+		"region": Vector2(0, 0) 
 	},
 	"blueberry": {
 		"name": "blueberry",
-		"value": 20
+		"value": 20,
+		"region": Vector2(1, 0) 
+	},
+	"greenberry": {
+		"name": "greenberry",
+		"value": 20,
+		"region": Vector2(2, 0) 
+	},
+	"orangeberry": {
+		"name": "orangeberry",
+		"value": 20,
+		"region": Vector2(3, 0) 
+	},
+	"aquaberry": {
+		"name": "aquaberry",
+		"value": 20,
+		"region": Vector2(4, 0) 
 	}
 }
 
