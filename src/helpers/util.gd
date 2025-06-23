@@ -34,6 +34,31 @@ const all_items = {
 		"name": "aquaberry",
 		"value": 20,
 		"region": Vector2(4, 0) 
+	},
+	"game_console_1": {
+		"name": "game_console_1",
+		"value": 20,
+		"region": Vector2(0, 1) 
+	},
+	"game_console_2": {
+		"name": "game_console_2",
+		"value": 20,
+		"region": Vector2(1, 1) 
+	},
+	"game_console_3": {
+		"name": "game_console_3",
+		"value": 20,
+		"region": Vector2(2, 1) 
+	},
+	"game_console_4": {
+		"name": "game_console_4",
+		"value": 20,
+		"region": Vector2(3, 1) 
+	},
+	"game_console_5": {
+		"name": "game_console_5",
+		"value": 20,
+		"region": Vector2(4, 1) 
 	}
 }
 
@@ -42,7 +67,7 @@ var all_items_array = all_items.keys()
 
 # Progress
 var money = 0 
-
+var trending_products_names_array : Array = []
 
 
 # Functions 
