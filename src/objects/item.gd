@@ -18,5 +18,10 @@ func _ready():
 		
 func gather():
 	if(Input.is_action_pressed("gather")):
-		UTIL.money = UTIL.money + item_value
-		queue_free()
+		if item_name in UTIL.trending_products_names_array:
+			UTIL.money += item_value
+			UTIL.player_ref.get_node('effects').show_positive()
+			queue_free()
+		else:
+			UTIL.player_ref.get_node('effects').show_negative()
+			queue_free()

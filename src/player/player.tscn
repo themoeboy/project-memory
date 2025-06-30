@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://l85yqf8v2y5"]
+[gd_scene load_steps=24 format=3 uid="uid://l85yqf8v2y5"]
 
 [ext_resource type="Script" uid="uid://beguc8jpyxdxe" path="res://src/player/player.gd" id="1_s5dbj"]
 [ext_resource type="Shader" uid="uid://bmpheaqyydsok" path="res://src/shaders/smooth_pixel.gdshader" id="2_o822w"]
@@ -7,6 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://dne4rabaer156" path="res://src/helpers/health.tscn" id="4_244u8"]
 [ext_resource type="Script" uid="uid://b8l7epw8fyidg" path="res://src/player/hurtbox.gd" id="5_5f2sf"]
 [ext_resource type="Script" uid="uid://buk6lsoqwwf6r" path="res://src/player/test.gd" id="6_jiejy"]
+[ext_resource type="Script" uid="uid://dbsqrhfi2c7hh" path="res://src/player/effects.gd" id="8_8ydov"]
+[ext_resource type="Texture2D" uid="uid://boeq3csbtqkmq" path="res://assets/ui/good.png" id="8_l271a"]
+[ext_resource type="Texture2D" uid="uid://mh3f0m4k2uu" path="res://assets/ui/warning.png" id="9_8ydov"]
 
 [sub_resource type="Animation" id="Animation_x42xx"]
 length = 0.001
@@ -207,6 +210,18 @@ shape = SubResource("CircleShape2D_o822w")
 
 [node name="parry_timer" type="Timer" parent="."]
 one_shot = true
+
+[node name="effects" type="Node2D" parent="."]
+position = Vector2(15, -17)
+script = ExtResource("8_8ydov")
+
+[node name="positive" type="Sprite2D" parent="effects"]
+visible = false
+texture = ExtResource("8_l271a")
+
+[node name="negative" type="Sprite2D" parent="effects"]
+visible = false
+texture = ExtResource("9_8ydov")
 
 [connection signal="area_entered" from="dash_attack" to="dash_attack" method="_on_area_entered"]
 [connection signal="area_entered" from="hurtbox" to="hurtbox" method="_on_area_entered"]
