@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://don7se1bwmdv4"]
+
+[ext_resource type="Script" uid="uid://dfgfwsboohu6t" path="res://src/objects/furniture_manager.gd" id="1_v8qv5"]
+
+[node name="furniture_manager" type="Node2D"]
+script = ExtResource("1_v8qv5")

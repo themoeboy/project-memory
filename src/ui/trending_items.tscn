@@ -16,7 +16,6 @@ grow_vertical = 2
 texture = ExtResource("2_lambs")
 expand_mode = 1
 script = ExtResource("1_8ocln")
-trending_count = 8
 
 [node name="grid" type="GridContainer" parent="."]
 layout_mode = 1

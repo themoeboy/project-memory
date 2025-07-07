@@ -20,11 +20,14 @@ extends Node2D
 var player_ref
 var last_chunk_x = 0
 var chunks = []
+var chunk_scenes = []
+
 
 func _ready():
+	for path in UTIL.CHUNK_SCENE_PATHS:
+		chunk_scenes.append(load(path))
 	for i in range(preload_chunks):
 		spawn_chunk(i * chunk_length)
-
 	spawn_player()
 	randomize_timer()
 	
@@ -37,8 +40,13 @@ func _process(_delta):
 			spawn_chunk(last_chunk_x)
 		cleanup_chunks(player_x)
 
+
 func spawn_chunk(x_pos):
-	var chunk = chunk_scene.instantiate()
+	if chunk_scenes.size() == 0:
+		push_error("No chunk scenes loaded!")
+		return
+	var random_index = randi() % chunk_scenes.size()
+	var chunk = chunk_scenes[random_index].instantiate()
 	chunk.position = Vector2(x_pos, 0)
 	add_child(chunk)
 	chunks.append(chunk)

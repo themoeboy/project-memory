@@ -9,7 +9,7 @@ var can_dash : bool = false
 var is_parrying : bool = false
 
 # Constants
-const all_items = {
+const ALL_ITEMS = {
 	"orange": {
 		"name": "orange",
 		"value": 10,
@@ -62,8 +62,20 @@ const all_items = {
 	}
 }
 
-var all_items_array = all_items.keys()
+var ALL_ITEMS_ARRAY = ALL_ITEMS.keys()
 
+var INITIAL_TRENDING_CNT = 4
+
+const CHUNK_COUNT = 2
+const CHUNK_WORLD = "first"
+
+func get_chunk_scene_paths() -> Array:
+	var arr = []
+	for i in CHUNK_COUNT:
+		arr.append("res://src/general/chunks/%s_level_chunk_%d.tscn" % [CHUNK_WORLD, i + 1])
+	return arr
+
+var CHUNK_SCENE_PATHS = get_chunk_scene_paths()
 
 # Progress
 var money = 0 

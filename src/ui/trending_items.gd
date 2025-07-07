@@ -2,7 +2,7 @@ extends Control
 
 var item = preload("res://src/ui/trending_item.tscn")
 @onready var grid = $grid
-@export var trending_count = 5
+@onready var trending_count = UTIL.INITIAL_TRENDING_CNT
 
 func _ready():
 	randomize()
@@ -11,7 +11,7 @@ func _ready():
 	
 func generate_trending_products():
 	UTIL.trending_products_names_array.clear()
-	var items = UTIL.all_items_array.duplicate()
+	var items = UTIL.ALL_ITEMS_ARRAY.duplicate()
 	items.shuffle()
 	for i in range(min(trending_count, items.size())):
 		UTIL.trending_products_names_array.append(items[i])

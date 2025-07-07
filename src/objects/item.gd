@@ -9,7 +9,7 @@ const sprite_size = Vector2(16, 16)
 
 func _ready():
 	if item_name != "":
-		var item_data = UTIL.all_items[item_name]
+		var item_data = UTIL.ALL_ITEMS[item_name]
 		item_value = item_data.value
 		sprite.texture = sprite_sheet
 		sprite.region_enabled = true

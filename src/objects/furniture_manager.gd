@@ -1,18 +1,14 @@
 extends Node2D
 
-var max_item_count: int = 2
-var tile_size: int = 16
-var row: int = 5
-var col: int = 3
-var offset: int = 4
+@export var max_item_count: int = 2
+@export var tile_size: int = 16
+@export var row: int = 5
+@export var col: int = 3
+@export var offset: int = 4
 
 var item_scene = preload("res://src/objects/item.tscn")
-var instancePos = self.position
+@onready var instancePos = get_parent().position
 
-func _ready():
-	randomize()
-	generate_items()
-	
 func generate_items():
 	var available_cells = []
 	var item_count = 1 + randi() % max_item_count
@@ -36,7 +32,7 @@ func generate_items():
 
 		item_instance.position = Vector2(pos_x, pos_y)
 		
-		var random_index = randi() % UTIL.all_items_array.size()
-		item_instance.item_name = UTIL.all_items_array[random_index]
+		var random_index = randi() % UTIL.ALL_ITEMS_ARRAY.size()
+		item_instance.item_name = UTIL.ALL_ITEMS_ARRAY[random_index]
 
 		add_child(item_instance)
