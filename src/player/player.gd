@@ -156,6 +156,7 @@ func handle_running_state(delta):
 	return
 
 func handle_jumping_state(delta):
+	velocity.x = move_toward(velocity.x, MAX_SPEED, RUNNING_ACCELERATION * delta)
 	if Input.is_action_just_pressed("jump") and can_double_jump:
 		double_jump()
 		go_to_state(ENUMS.player_state.DOUBLE_JUMPING)
@@ -202,7 +203,7 @@ func handle_hurting(delta):
 
 func jump():
 	velocity.y = JUMP_FORCE
-
+	
 func double_jump():
 	current_gravity = GRAVITY
 	velocity.y = JUMP_FORCE

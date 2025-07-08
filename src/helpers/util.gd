@@ -66,7 +66,7 @@ var ALL_ITEMS_ARRAY = ALL_ITEMS.keys()
 
 var INITIAL_TRENDING_CNT = 4
 
-const CHUNK_COUNT = 2
+const CHUNK_COUNT = 3
 const CHUNK_WORLD = "first"
 
 func get_chunk_scene_paths() -> Array:
