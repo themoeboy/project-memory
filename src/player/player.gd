@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 # Constants
 @export var GRAVITY = 2000.0
-@export var MAX_SPEED = 200.0
+@export var MAX_SPEED = 100.0
 @export var MAX_WALKING_SPEED = 50.0
 @export var WALKING_ACCELERATION = 50.0
 @export var WALKING_DEACCELERATION = 100.0
@@ -21,7 +21,7 @@ extends CharacterBody2D
 @export var POLEARM_THROW_DAMAGE = 10.0
 
 # Variables
-var current_state = ENUMS.player_state.WALKING
+var current_state = ENUMS.player_state.RUNNING
 var previous_state
 var current_gravity = GRAVITY
 var coyote_timer = 0.0
@@ -52,7 +52,7 @@ var polearm_instance
 func _ready():
 	health_component.health_changed.connect(_on_health_changed)  
 	health_component.now_dead.connect(_on_death)
-	go_to_state(ENUMS.player_state.WALKING)
+	go_to_state(ENUMS.player_state.RUNNING)
 	current_gravity = GRAVITY
 	
 func _physics_process(delta):
@@ -132,7 +132,7 @@ func go_to_state(state):
 	
 func handle_walking_state(delta):
 	current_gravity = GRAVITY
-	if Input.is_action_just_pressed('run'):
+	if Input.is_action_just_released('walk'):
 		go_to_state(ENUMS.player_state.RUNNING)
 	if Input.is_action_just_pressed('jump'):
 		go_to_state(ENUMS.player_state.JUMPING)
@@ -147,7 +147,7 @@ func handle_walking_state(delta):
 func handle_running_state(delta):
 	current_gravity = GRAVITY
 	velocity.x = move_toward(velocity.x, MAX_SPEED, RUNNING_ACCELERATION * delta)
-	if Input.is_action_just_released('run'):
+	if Input.is_action_pressed('walk'):
 		go_to_state(ENUMS.player_state.WALKING)
 	if Input.is_action_just_pressed('jump'):
 		go_to_state(ENUMS.player_state.JUMPING)
@@ -164,7 +164,7 @@ func handle_jumping_state(delta):
 	if Input.is_action_just_pressed('parry'):
 		go_to_state(ENUMS.player_state.PARRYING)
 	if is_on_floor():
-		go_to_state(ENUMS.player_state.WALKING)
+		go_to_state(ENUMS.player_state.RUNNING)
 		return
 	elif not is_on_floor() and velocity.y > 0 and current_state != ENUMS.player_state.FALLING:
 		go_to_state(ENUMS.player_state.FALLING)
@@ -179,7 +179,7 @@ func handle_falling_state(delta):
 		go_to_state(ENUMS.player_state.PARRYING)
 	if is_on_floor():
 		if abs(velocity.x) > 0:
-			go_to_state(ENUMS.player_state.WALKING)
+			go_to_state(ENUMS.player_state.RUNNING)
 
 func handle_double_jumping_state(delta):
 	handle_jumping_state(delta)
@@ -199,7 +199,7 @@ func handle_parrying_state(delta):
 func handle_hurting(delta):
 	hurt_timer -= delta
 	if hurt_timer <= 0: 
-		go_to_state(ENUMS.player_state.WALKING)
+		go_to_state(ENUMS.player_state.RUNNING)
 
 func jump():
 	velocity.y = JUMP_FORCE

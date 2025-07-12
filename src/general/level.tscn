@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c1xp2narxicdy"]
+[gd_scene load_steps=12 format=3 uid="uid://c1xp2narxicdy"]
 
 [ext_resource type="Script" uid="uid://bbslkoi1ndanu" path="res://src/general/level.gd" id="1_t41yl"]
 [ext_resource type="Shader" uid="uid://bmpheaqyydsok" path="res://src/shaders/smooth_pixel.gdshader" id="2_eegbk"]
@@ -11,6 +11,9 @@
 [ext_resource type="Script" uid="uid://bk82sch1ke44m" path="res://src/general/ui_layer.gd" id="8_msyly"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fyndt"]
+shader = ExtResource("2_eegbk")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2qviq"]
 shader = ExtResource("2_eegbk")
 
 [node name="level" type="Node2D"]
@@ -40,6 +43,7 @@ material = SubResource("ShaderMaterial_fyndt")
 motion_mirroring = Vector2(320, 0)
 
 [node name="background" type="Sprite2D" parent="parallax/background"]
+material = SubResource("ShaderMaterial_2qviq")
 position = Vector2(160, 90)
 texture = ExtResource("5_0rxcc")
 

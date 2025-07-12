@@ -1,6 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://ch3x7rbdp282f"]
+[gd_scene load_steps=6 format=3 uid="uid://ch3x7rbdp282f"]
 
 [ext_resource type="Script" uid="uid://ml4igx4bfnw0" path="res://src/objects/item.gd" id="1_ly05o"]
+[ext_resource type="Shader" uid="uid://wvv5r3o4ev3g" path="res://src/shaders/outline.gdshader" id="2_ly05o"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w6iwk"]
+shader = ExtResource("2_ly05o")
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/width = 1.0
+shader_parameter/pattern = 0
+shader_parameter/inside = true
+shader_parameter/add_margins = false
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_cwtds"]
 
@@ -12,6 +21,7 @@ collision_mask = 512
 script = ExtResource("1_ly05o")
 
 [node name="sprite" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_w6iwk")
 texture = SubResource("CompressedTexture2D_cwtds")
 
 [node name="collision" type="CollisionShape2D" parent="."]
