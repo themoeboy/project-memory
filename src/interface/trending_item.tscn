@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://dkwepvseyp0f8"]
+
+[ext_resource type="Script" uid="uid://3kby73f0a10t" path="res://src/interface/trending_item.gd" id="1_updkr"]
+
+[node name="trending_item" type="Control"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_updkr")
+
+[node name="texture" type="Sprite2D" parent="."]
+position = Vector2(8, 8)

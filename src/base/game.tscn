@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://840hyqrmfniv"]
+
+[ext_resource type="PackedScene" uid="uid://fvqmovhepmib" path="res://src/objects/grid.tscn" id="1_32xvv"]
+
+[node name="game" type="Node"]
+
+[node name="board" type="Node" parent="."]
+
+[node name="grid" parent="board" instance=ExtResource("1_32xvv")]
+
+[node name="Camera2D" type="Camera2D" parent="."]

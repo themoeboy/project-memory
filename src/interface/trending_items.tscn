@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://blgpmm4p381sa"]
+
+[ext_resource type="Script" uid="uid://bacppp3365qrj" path="res://src/interface/trending_items.gd" id="1_8ocln"]
+[ext_resource type="Texture2D" uid="uid://kgatf1qhwil6" path="res://assets/ui/modal.png" id="2_lambs"]
+
+[node name="trending_products" type="TextureRect"]
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_right = 1.0
+offset_bottom = -94.0
+grow_horizontal = 0
+grow_vertical = 2
+texture = ExtResource("2_lambs")
+expand_mode = 1
+script = ExtResource("1_8ocln")
+
+[node name="grid" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+columns = 4

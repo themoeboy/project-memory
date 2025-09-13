@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://b808bgqf1dyio"]
+
+[ext_resource type="Script" uid="uid://batm3hfswuvvj" path="res://src/objects/tile.gd" id="1_b8t1j"]
+[ext_resource type="Texture2D" uid="uid://dmk2566xqufud" path="res://assets/environment/flipped_tile.png" id="2_upxva"]
+[ext_resource type="Script" uid="uid://hnhqcdlsperj" path="res://src/objects/mouse_area.gd" id="3_6ey1r"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h8rm8"]
+size = Vector2(16, 16)
+
+[node name="tile" type="Node2D"]
+script = ExtResource("1_b8t1j")
+
+[node name="background" type="Sprite2D" parent="."]
+texture = ExtResource("2_upxva")
+
+[node name="item_sprite" type="Sprite2D" parent="."]
+
+[node name="mouse_area" type="Area2D" parent="."]
+script = ExtResource("3_6ey1r")
+
+[node name="area" type="CollisionShape2D" parent="mouse_area"]
+shape = SubResource("RectangleShape2D_h8rm8")
+
+[connection signal="input_event" from="mouse_area" to="mouse_area" method="_on_input_event"]
+[connection signal="mouse_entered" from="mouse_area" to="mouse_area" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="mouse_area" to="mouse_area" method="_on_mouse_exited"]
