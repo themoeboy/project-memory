@@ -57,6 +57,8 @@ const ALL_ITEMS = {
 
 var ALL_ITEMS_ARRAY = ALL_ITEMS.keys()
 
+const TILE_SIZE = 32
+const SPRITE_SIZE = 16
 
 # Enums
 

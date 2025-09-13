@@ -12,7 +12,7 @@ const sprite_sheet = preload("res://assets/items/item_spritesheet.png")
 const flipped_tile_sprite = preload("res://assets/environment/flipped_tile.png")
 const unflipped_tile_sprite = preload("res://assets/environment/unflipped_tile.png")
 
-const sprite_size = Vector2(16, 16) 
+const sprite_size = Vector2(SCHEMA.SPRITE_SIZE, SCHEMA.SPRITE_SIZE) 
 
 func connect_signals():
 	mouse_area.connect("confirm", _on_confirmed)

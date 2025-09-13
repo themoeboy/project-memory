@@ -8,4 +8,5 @@
 
 [node name="grid" parent="board" instance=ExtResource("1_32xvv")]
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="camera" type="Camera2D" parent="."]
+anchor_mode = 0
