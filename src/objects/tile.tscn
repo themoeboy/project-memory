@@ -1,13 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://b808bgqf1dyio"]
+[gd_scene load_steps=4 format=3 uid="uid://b808bgqf1dyio"]
 
 [ext_resource type="Script" uid="uid://batm3hfswuvvj" path="res://src/objects/tile.gd" id="1_b8t1j"]
-[ext_resource type="Script" uid="uid://hnhqcdlsperj" path="res://src/objects/mouse_area.gd" id="3_6ey1r"]
+[ext_resource type="PackedScene" uid="uid://c66gypnwwca5c" path="res://src/objects/components/mouse_area.tscn" id="2_upxva"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_upxva"]
 load_path = "res://.godot/imported/flipped_tile.png-8684ff9e2809573f71b6acb322e6333b.ctex"
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_h8rm8"]
-size = Vector2(32, 32)
 
 [node name="tile" type="Node2D"]
 script = ExtResource("1_b8t1j")
@@ -19,13 +16,4 @@ texture = SubResource("CompressedTexture2D_upxva")
 [node name="item_sprite" type="Sprite2D" parent="."]
 position = Vector2(16, 16)
 
-[node name="mouse_area" type="Area2D" parent="."]
-script = ExtResource("3_6ey1r")
-
-[node name="area" type="CollisionShape2D" parent="mouse_area"]
-position = Vector2(16, 16)
-shape = SubResource("RectangleShape2D_h8rm8")
-
-[connection signal="input_event" from="mouse_area" to="mouse_area" method="_on_input_event"]
-[connection signal="mouse_entered" from="mouse_area" to="mouse_area" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="mouse_area" to="mouse_area" method="_on_mouse_exited"]
+[node name="mouse_area" parent="." instance=ExtResource("2_upxva")]

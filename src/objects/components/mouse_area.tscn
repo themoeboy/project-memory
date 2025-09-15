@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://c66gypnwwca5c"]
+
+[ext_resource type="Script" uid="uid://hnhqcdlsperj" path="res://src/objects/components/mouse_area.gd" id="1_rwoks"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h8rm8"]
+size = Vector2(32, 32)
+
+[node name="mouse_area" type="Area2D"]
+script = ExtResource("1_rwoks")
+
+[node name="area" type="CollisionShape2D" parent="."]
+position = Vector2(16, 16)
+shape = SubResource("RectangleShape2D_h8rm8")
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

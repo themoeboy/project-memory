@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://smlwfbir3kjr"]
+
+[ext_resource type="Script" uid="uid://cn08gp2n0ovqa" path="res://src/objects/stats.gd" id="1_w44bl"]
+
+[node name="stats" type="Node2D"]
+script = ExtResource("1_w44bl")
+
+[node name="score" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0

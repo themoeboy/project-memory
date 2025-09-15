@@ -38,5 +38,6 @@ func _process(delta: float):
 	return
 	
 func _on_confirmed() -> void:
-	is_flipped = !is_flipped
-	PROVIDER.flipped_tiles_stack.append(item_name)
+	if(PROVIDER.tiles_clickable):
+		is_flipped = !is_flipped
+		PROVIDER.flipped_tiles_stack.append(item_name)

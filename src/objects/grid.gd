@@ -13,26 +13,27 @@ func _ready() -> void:
 	return
 
 func _process(delta: float):
-	if can_process:
+	if PROVIDER.tiles_clickable:
 		remove_tiles()
 	return
 	
 func remove_tiles():
 	if PROVIDER.flipped_tiles_stack.size() == 2:
-		can_process = false
+		PROVIDER.tiles_clickable = false
 		await get_tree().create_timer(0.5).timeout
-		
 		if PROVIDER.flipped_tiles_stack[0] == PROVIDER.flipped_tiles_stack[1]:
 			for child in get_children():
 				if child.item_name == PROVIDER.flipped_tiles_stack[0]:
 					child.queue_free()
+					PROVIDER.current_score = PROVIDER.current_score + SCHEMA.BASE_ADD_SCORE
 		else:
 			for child in get_children():
 				if child.is_flipped:
 					child.is_flipped = false
+			PROVIDER.current_score = PROVIDER.current_score - SCHEMA.BASE_MINUS_SCORE
 		
 		PROVIDER.flipped_tiles_stack.clear()
-		can_process = true
+		PROVIDER.tiles_clickable = true
 	return
 
 func generate_tiles():
