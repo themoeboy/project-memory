@@ -6,11 +6,25 @@ extends Node2D
 @export var col: int = 4
 
 var item_scene = preload("res://src/objects/tile.tscn")
-var can_process: bool = true
+var score_tween: Tween
 
 func _ready() -> void:
 	generate_tiles()
 	return
+
+func update_score(amount: int) -> void:
+	var start_score = PROVIDER.current_score
+	var end_score = start_score + amount
+	if score_tween:
+		score_tween.kill()
+		
+	score_tween = create_tween()
+	score_tween.tween_method(
+		func(value: int): PROVIDER.current_score = value,
+		start_score,
+		end_score,
+		0.25
+   	)
 
 func _process(delta: float):
 	if PROVIDER.tiles_clickable:
@@ -25,12 +39,12 @@ func remove_tiles():
 			for child in get_children():
 				if child.item_name == PROVIDER.flipped_tiles_stack[0]:
 					child.queue_free()
-					PROVIDER.current_score = PROVIDER.current_score + SCHEMA.BASE_ADD_SCORE
+					update_score(+SCHEMA.BASE_ADD_SCORE)
 		else:
 			for child in get_children():
 				if child.is_flipped:
 					child.is_flipped = false
-			PROVIDER.current_score = PROVIDER.current_score - SCHEMA.BASE_MINUS_SCORE
+			update_score(-SCHEMA.BASE_MINUS_SCORE)
 		
 		PROVIDER.flipped_tiles_stack.clear()
 		PROVIDER.tiles_clickable = true
@@ -38,7 +52,6 @@ func remove_tiles():
 
 func generate_tiles():
 	var available_cells = []
-	var pairs_to_generate = (row * col) / 2
 	var selected_items = []
 	var used_indices = [] 
 	
