@@ -40,4 +40,5 @@ func _process(delta: float):
 func _on_confirmed() -> void:
 	if(PROVIDER.tiles_clickable):
 		is_flipped = !is_flipped
+		AUDIO.play(true, 'confirm')
 		PROVIDER.flipped_tiles_stack.append(item_name)

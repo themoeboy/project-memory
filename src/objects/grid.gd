@@ -39,12 +39,18 @@ func remove_tiles():
 			for child in get_children():
 				if child.item_name == PROVIDER.flipped_tiles_stack[0]:
 					child.queue_free()
+					AUDIO.play(true, 'collect')
 					update_score(+SCHEMA.BASE_ADD_SCORE)
+					PROVIDER.emit_signal("show_flair", SCHEMA.BASE_ADD_SCORE, true)
+			
+					
 		else:
 			for child in get_children():
 				if child.is_flipped:
 					child.is_flipped = false
+			AUDIO.play(true, 'break')
 			update_score(-SCHEMA.BASE_MINUS_SCORE)
+			PROVIDER.emit_signal("show_flair", SCHEMA.BASE_MINUS_SCORE, false)
 		
 		PROVIDER.flipped_tiles_stack.clear()
 		PROVIDER.tiles_clickable = true

@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://smlwfbir3kjr"]
+[gd_scene load_steps=3 format=3 uid="uid://smlwfbir3kjr"]
 
 [ext_resource type="Script" uid="uid://cn08gp2n0ovqa" path="res://src/objects/stats.gd" id="1_w44bl"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_w44bl"]
+font_color = Color(1.7808378e-06, 0.6344285, 0.43674687, 1)
 
 [node name="stats" type="Node2D"]
 script = ExtResource("1_w44bl")
@@ -8,3 +11,9 @@ script = ExtResource("1_w44bl")
 [node name="score" type="Label" parent="."]
 offset_right = 40.0
 offset_bottom = 23.0
+
+[node name="flair" type="Label" parent="."]
+offset_top = -20.0
+offset_right = 40.0
+offset_bottom = 3.0
+label_settings = SubResource("LabelSettings_w44bl")
