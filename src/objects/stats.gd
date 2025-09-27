@@ -11,10 +11,10 @@ func update_score():
 	score_label.text = str(PROVIDER.current_score)
 	return
 
-func score_flair(value: int, sign: bool):
+func score_flair(value: int):
 	flair.text = str(value)
 	flair.visible = true
-	if(sign):
+	if(value > 0):
 		flair.label_settings.font_color = SCHEMA.COLOR_SCHEMA.success
 	else:
 		flair.label_settings.font_color = SCHEMA.COLOR_SCHEMA.fail

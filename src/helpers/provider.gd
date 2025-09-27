@@ -9,5 +9,6 @@ var flipped_tiles_stack = []
 var to_remove_tile 
 var tiles_clickable: bool = true
 var current_score: int = 0
-
+var lose_streak = 0 
+var win_streak = 0
 	

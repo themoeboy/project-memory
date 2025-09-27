@@ -13,8 +13,18 @@ func _ready() -> void:
 	return
 
 func update_score(amount: int) -> void:
-	var start_score = PROVIDER.current_score
-	var end_score = start_score + amount
+	if (amount > 0):
+		PROVIDER.lose_streak = 0
+		PROVIDER.win_streak = PROVIDER.win_streak + 1
+	else:
+		PROVIDER.win_streak = 0
+		PROVIDER.lose_streak = PROVIDER.lose_streak + 1
+
+	var start_score = PROVIDER.current_score 
+	var delta_score = amount - (PROVIDER.lose_streak * SCHEMA.MINUS_STREAK_CONST) + (PROVIDER.win_streak * SCHEMA.ADD_STREAK_CONST)
+	var end_score = start_score + delta_score
+	PROVIDER.emit_signal("show_flair", delta_score)
+	
 	if score_tween:
 		score_tween.kill()
 		
@@ -41,7 +51,7 @@ func remove_tiles():
 					child.queue_free()
 					AUDIO.play(true, 'collect')
 					update_score(+SCHEMA.BASE_ADD_SCORE)
-					PROVIDER.emit_signal("show_flair", SCHEMA.BASE_ADD_SCORE, true)
+					
 			
 					
 		else:
@@ -50,7 +60,6 @@ func remove_tiles():
 					child.is_flipped = false
 			AUDIO.play(true, 'break')
 			update_score(-SCHEMA.BASE_MINUS_SCORE)
-			PROVIDER.emit_signal("show_flair", SCHEMA.BASE_MINUS_SCORE, false)
 		
 		PROVIDER.flipped_tiles_stack.clear()
 		PROVIDER.tiles_clickable = true

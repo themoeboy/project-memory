@@ -64,9 +64,11 @@ const COLOR_SCHEMA = {
 
 const TILE_SIZE = 32
 const SPRITE_SIZE = 16
-const BASE_SCORE = 300
-const BASE_ADD_SCORE = 100
-const BASE_MINUS_SCORE = 50
+const BASE_SCORE = 500
+const BASE_ADD_SCORE = 50
+const BASE_MINUS_SCORE = 5
+const ADD_STREAK_CONST = 10
+const MINUS_STREAK_CONST = 5
 
 # Enums
 
