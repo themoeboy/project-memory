@@ -8,35 +8,35 @@ var queue = []  # The queue of sounds to play
 
 
 func _ready():
-	# Create the pool of AudioStreamPlayer nodes
-	for i in num_players:
-		var p = AudioStreamPlayer.new()
-		add_child(p)
-		available.append(p)
-		p.finished.connect(on_stream_finished.bind(p))
-		p.bus = bus
-		
-		
+    # Create the pool of AudioStreamPlayer nodes
+    for i in num_players:
+        var p = AudioStreamPlayer.new()
+        add_child(p)
+        available.append(p)
+        p.finished.connect(on_stream_finished.bind(p))
+        p.bus = bus
+        
+        
 func on_stream_finished(stream):
-	# When a stream finishes playing a sound, make it available again
-	available.append(stream)
-	
+    # When a stream finishes playing a sound, make it available again
+    available.append(stream)
+    
 
 func play(sfx: bool, sound_label: String) -> void:
-	var path: String = "res://assets/audio/"
-	if sfx:
-		path += "sfx/"
-	else:
-		path += "music/"
-	var sound_path: String = path + sound_label + '.wav'
-	if ResourceLoader.exists(sound_path):
-		queue.append(sound_path)
-	else:
-		push_warning("Sound file not found: " + sound_path)
-	
+    var path: String = "res://assets/audio/"
+    if sfx:
+        path += "sfx/"
+    else:
+        path += "music/"
+    var sound_path: String = path + sound_label + '.wav'
+    if ResourceLoader.exists(sound_path):
+        queue.append(sound_path)
+    else:
+        push_warning("Sound file not found: " + sound_path)
+    
 func _process(delta):
-	# Play a queued sound if any player is available
-	if not queue.is_empty() and not available.is_empty():
-		available[0].stream = load(queue.pop_front())
-		available[0].play()
-		available.pop_front()
+    # Play a queued sound if any player is available
+    if not queue.is_empty() and not available.is_empty():
+        available[0].stream = load(queue.pop_front())
+        available[0].play()
+        available.pop_front()

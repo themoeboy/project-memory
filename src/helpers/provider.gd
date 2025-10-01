@@ -1,7 +1,9 @@
 extends Node
 
 # Signal bus
-signal show_flair(value: int)
+signal score_flair(value: int)
+signal generate_tiles(row: int, col: int)
+signal level_complete()
 
 # This is where global data is saved
 
@@ -11,4 +13,5 @@ var tiles_clickable: bool = true
 var current_score: int = 0
 var lose_streak = 0 
 var win_streak = 0
-	
+var current_level: int = 1
+    
